@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 
-abstract class AppColors {}
+abstract class AppColors {
+  static const textGrey = Color(0xFF939393);
+}
 
 abstract class AppTheme {
   static final ThemeData lightTheme = ThemeData(
@@ -21,6 +23,11 @@ abstract class AppTheme {
       ),
     ),
     textTheme: const TextTheme(
+      bodySmall: TextStyle(
+        color: Colors.black,
+        fontFamily: 'Montserrat',
+        fontSize: 14,
+      ),
       titleMedium: TextStyle(
         color: Colors.black,
       ),
@@ -28,6 +35,21 @@ abstract class AppTheme {
         color: Colors.black,
         fontSize: 16,
       ),
+      displayMedium: TextStyle(
+        fontFamily: 'Montserrat',
+        fontSize: 18,
+        fontWeight: FontWeight.bold,
+        color: Colors.black,
+      ),
+      displayLarge: TextStyle(
+        fontFamily: 'Montserrat',
+        fontSize: 40,
+        fontWeight: FontWeight.bold,
+        color: Colors.black,
+      ),
+    ),
+    iconTheme: const IconThemeData(
+      color: Colors.black,
     ),
   );
 
@@ -49,6 +71,11 @@ abstract class AppTheme {
       ),
     ),
     textTheme: const TextTheme(
+      bodySmall: TextStyle(
+        color: Colors.white,
+        fontFamily: 'Montserrat',
+        fontSize: 14,
+      ),
       titleMedium: TextStyle(
         color: Colors.white,
       ),
@@ -56,6 +83,20 @@ abstract class AppTheme {
         color: Colors.white,
         fontSize: 16,
       ),
+      displayMedium: TextStyle(
+        fontFamily: 'Montserrat',
+        fontSize: 18,
+        fontWeight: FontWeight.bold,
+        color: Colors.white,
+      ),
+      displayLarge: TextStyle(
+          fontFamily: 'Montserrat',
+          fontSize: 40,
+          fontWeight: FontWeight.bold,
+          color: Colors.white),
+    ),
+    iconTheme: const IconThemeData(
+      color: Colors.white,
     ),
   );
 }

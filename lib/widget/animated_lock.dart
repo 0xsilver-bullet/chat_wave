@@ -39,6 +39,12 @@ class _AnimatedLockState extends State<AnimatedLock>
   }
 
   @override
+  void dispose() {
+    controller.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return SizedBox(
       height: 48,
