@@ -1,3 +1,4 @@
+import 'package:chat_wave/screens/screens.dart';
 import 'package:flutter/material.dart';
 import 'package:chat_wave/widget/widgets.dart';
 
@@ -30,7 +31,7 @@ class HomeScreen extends StatelessWidget {
                 itemCount: 100000,
                 itemBuilder: (context, index) {
                   return ChatItem(
-                    onClick: () {},
+                    onClick: () => Navigator.of(context).push(ChatScreen.route),
                   );
                 },
               ),
