@@ -1,4 +1,6 @@
+import 'package:chat_wave/screens/screens.dart';
 import 'package:flutter/material.dart';
+import 'package:chat_wave/theme.dart';
 
 void main() {
   runApp(const ChatWaveApp());
@@ -9,21 +11,10 @@ class ChatWaveApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
-      home: ChatWaveHome(),
-    );
-  }
-}
-
-class ChatWaveHome extends StatelessWidget {
-  const ChatWaveHome({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return const Scaffold(
-      body: Center(
-        child: Text('Chat Wave'),
-      ),
+    return MaterialApp(
+      theme: AppTheme.lightTheme,
+      darkTheme: AppTheme.darkTheme,
+      home: LoginScreen(),
     );
   }
 }
