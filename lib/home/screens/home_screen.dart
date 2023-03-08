@@ -1,6 +1,7 @@
-import 'package:chat_wave/screens/screens.dart';
+import 'package:chat_wave/chat/screens/chat_screen.dart';
 import 'package:flutter/material.dart';
-import 'package:chat_wave/widget/widgets.dart';
+
+import '../widgets/widgets.dart';
 
 class HomeScreen extends StatelessWidget {
   HomeScreen({super.key});

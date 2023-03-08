@@ -1,6 +1,6 @@
-import 'package:chat_wave/screens/screens.dart';
 import 'package:flutter/material.dart';
 import 'package:chat_wave/theme.dart';
+import 'auth/screen/auth_screens.dart';
 
 void main() {
   runApp(const ChatWaveApp());

@@ -1,8 +1,8 @@
 import 'dart:convert';
-import 'package:chat_wave/data/network/dto/tokens_dto.dart';
-import 'package:chat_wave/data/network/errors/signup_failure.dart';
-import 'package:chat_wave/data/secure_local_storage_impl.dart';
-import 'package:chat_wave/domain/repository/auth_repository.dart';
+import 'package:chat_wave/auth/data/network/dto/tokens_dto.dart';
+import 'package:chat_wave/auth/data/network/errors/signup_failure.dart';
+import 'package:chat_wave/core/data/secure_local_storage_impl.dart';
+import 'package:chat_wave/auth/domain/repository/auth_repository.dart';
 import 'package:http/http.dart' as http;
 
 class AuthRepositoryImpl implements AuthRepository {

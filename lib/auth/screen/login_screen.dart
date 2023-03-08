@@ -1,9 +1,9 @@
-import 'package:chat_wave/blocs/login_bloc/login_bloc.dart';
-import 'package:chat_wave/screens/screens.dart';
-import 'package:chat_wave/widget/animated_lock.dart';
-import 'package:chat_wave/widget/auth_field.dart';
+import 'package:chat_wave/auth/blocs/login_bloc/login_bloc.dart';
+import 'package:chat_wave/home/screens/home_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import '../widgets/widgets.dart';
+import 'auth_screens.dart';
 
 class LoginScreen extends StatefulWidget {
   LoginScreen({super.key});

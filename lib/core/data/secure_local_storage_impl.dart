@@ -1,4 +1,4 @@
-import 'package:chat_wave/domain/secure_local_storage.dart';
+import 'package:chat_wave/core/domain/secure_local_storage.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 class SecureStorageImpl implements SecureStorage {

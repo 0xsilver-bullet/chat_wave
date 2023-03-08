@@ -1,7 +1,8 @@
-import 'package:chat_wave/blocs/signup_bloc/signup_bloc.dart';
+import 'package:chat_wave/auth/blocs/signup_bloc/signup_bloc.dart';
 import 'package:flutter/material.dart';
-import 'package:chat_wave/widget/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+
+import '../widgets/auth_field.dart';
 
 class SignupScreen extends StatefulWidget {
   SignupScreen({super.key});

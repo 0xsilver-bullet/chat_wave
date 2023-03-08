@@ -1,7 +1,8 @@
 import 'dart:math';
-import 'package:chat_wave/widget/widgets.dart';
 import 'package:faker/faker.dart';
 import 'package:flutter/material.dart';
+
+import '../widgets/widgets.dart';
 
 class ChatScreen extends StatelessWidget {
   ChatScreen({super.key});
