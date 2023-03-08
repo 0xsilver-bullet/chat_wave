@@ -21,6 +21,18 @@ abstract class AppTheme {
         ),
         borderSide: BorderSide(color: Colors.black, width: 2),
       ),
+      errorBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.all(
+          Radius.circular(24.0),
+        ),
+        borderSide: BorderSide(color: Colors.red, width: 2),
+      ),
+      focusedErrorBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.all(
+          Radius.circular(24.0),
+        ),
+        borderSide: BorderSide(color: Colors.red, width: 2),
+      ),
     ),
     textTheme: const TextTheme(
       bodySmall: TextStyle(
@@ -68,6 +80,18 @@ abstract class AppTheme {
           Radius.circular(24.0),
         ),
         borderSide: BorderSide(color: Colors.white, width: 2),
+      ),
+      errorBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.all(
+          Radius.circular(24.0),
+        ),
+        borderSide: BorderSide(color: Colors.red, width: 2),
+      ),
+      focusedErrorBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.all(
+          Radius.circular(24.0),
+        ),
+        borderSide: BorderSide(color: Colors.red, width: 2),
       ),
     ),
     textTheme: const TextTheme(
