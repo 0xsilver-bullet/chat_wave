@@ -14,7 +14,7 @@ class ChatWaveApp extends StatelessWidget {
     return MaterialApp(
       theme: AppTheme.lightTheme,
       darkTheme: AppTheme.darkTheme,
-      home: LoginScreen(),
+      home: const LoginScreen(),
     );
   }
 }

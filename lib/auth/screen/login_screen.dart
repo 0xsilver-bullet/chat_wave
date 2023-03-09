@@ -6,10 +6,7 @@ import '../widgets/widgets.dart';
 import 'auth_screens.dart';
 
 class LoginScreen extends StatefulWidget {
-  LoginScreen({super.key});
-
-  final usernameFieldController = TextEditingController();
-  final passwordFieldController = TextEditingController();
+  const LoginScreen({super.key});
 
   @override
   State<LoginScreen> createState() => _LoginScreenState();
@@ -34,9 +31,6 @@ class _LoginScreenState extends State<LoginScreen> {
               listener: (context, state) {
                 if (state is LoggedIn) {
                   Navigator.of(context).pushReplacement(HomeScreen.route);
-                } else if (state is LoggingFailed) {
-                  const snakBar = SnackBar(content: Text('Failed to login'));
-                  ScaffoldMessenger.of(context).showSnackBar(snakBar);
                 }
               },
               builder: (context, state) {
@@ -45,14 +39,24 @@ class _LoginScreenState extends State<LoginScreen> {
                     SizedBox(height: screenHeight * 0.4),
                     AuthField(
                       title: 'Username',
-                      controller: widget.usernameFieldController,
+                      onValueChange: (newValue) =>
+                          BlocProvider.of<LoginBloc>(context).add(
+                        UsernameFieldChanged(newValue),
+                      ),
                       textInputAction: TextInputAction.next,
+                      enabled: state is! LoginLoading,
+                      errorText: (state is NotLoggedIn)
+                          ? (state).loginFieldsState.usernameError
+                          : null,
                     ),
                     const SizedBox(height: 16.0),
                     AuthField(
                       title: 'Password',
-                      controller: widget.passwordFieldController,
                       obsecureText: _hidePassword,
+                      onValueChange: (newValue) =>
+                          BlocProvider.of<LoginBloc>(context).add(
+                        PasswordFieldChanged(newValue),
+                      ),
                       trailingIcon: IconButton(
                         onPressed: _toggleShowPassword,
                         icon: Icon(
@@ -62,17 +66,17 @@ class _LoginScreenState extends State<LoginScreen> {
                         ),
                         splashRadius: 16,
                       ),
+                      enabled: state is! LoginLoading,
+                      errorText: (state is NotLoggedIn)
+                          ? (state).loginFieldsState.passwordError
+                          : null,
                     ),
                     const SizedBox(height: 40),
                     AnimatedLock(
                       color: Theme.of(context).textTheme.titleLarge?.color ??
                           Colors.grey,
-                      onClick: () => BlocProvider.of<LoginBloc>(context).add(
-                        LogUserIn(
-                          username: widget.usernameFieldController.text,
-                          password: widget.passwordFieldController.text,
-                        ),
-                      ),
+                      onClick: () =>
+                          BlocProvider.of<LoginBloc>(context).add(Submit()),
                     ),
                     const Expanded(child: SizedBox()),
                     InkWell(

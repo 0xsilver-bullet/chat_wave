@@ -1,5 +1,5 @@
 import 'package:bloc/bloc.dart';
-import 'package:chat_wave/auth/data/network/errors/signup_failure.dart';
+import 'package:chat_wave/auth/domain/errors/signup_failure.dart';
 import 'package:chat_wave/auth/data/repository/auth_repository_impl.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';

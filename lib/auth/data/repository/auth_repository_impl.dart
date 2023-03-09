@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:chat_wave/auth/data/network/dto/tokens_dto.dart';
-import 'package:chat_wave/auth/data/network/errors/signup_failure.dart';
+import 'package:chat_wave/auth/domain/errors/login_failure.dart';
+import 'package:chat_wave/auth/domain/errors/signup_failure.dart';
 import 'package:chat_wave/core/data/secure_local_storage_impl.dart';
 import 'package:chat_wave/auth/domain/repository/auth_repository.dart';
 import 'package:http/http.dart' as http;
@@ -24,8 +25,23 @@ class AuthRepositoryImpl implements AuthRepository {
       },
       body: body,
     );
-    if (response.statusCode != 200) return false;
     final json = jsonDecode(response.body);
+
+    if (response.statusCode != 200) {
+      final errorCode = json['errorCode'] as int?;
+      if (errorCode == null) {
+        throw UnknownLoginError();
+      }
+      switch (errorCode) {
+        case LoginFailure.userNotFound:
+          throw UserNotFound();
+        case LoginFailure.invalidCredentials:
+          throw InvalidCredentials();
+        default:
+          throw UnknownLoginError();
+      }
+    }
+
     final tokens = TokensDto.fromJson(json);
     await _storage.saveToken(tokens.accessToken);
     await _storage.saveRefreshToken(tokens.refreshToken);

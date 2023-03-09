@@ -12,6 +12,7 @@ class AuthField extends StatelessWidget {
     this.controller,
     this.obsecureText = false,
     this.trailingIcon,
+    this.enabled = true,
     this.errorText,
   });
 
@@ -24,6 +25,7 @@ class AuthField extends StatelessWidget {
   final TextEditingController? controller;
   final bool obsecureText;
   final Widget? trailingIcon;
+  final bool enabled;
   final String? errorText;
 
   @override
@@ -42,6 +44,7 @@ class AuthField extends StatelessWidget {
             focusNode: focusNode,
             onSubmitted: onSubmitted,
             obscureText: obsecureText,
+            enabled: enabled,
             controller: controller,
           ),
         ),
