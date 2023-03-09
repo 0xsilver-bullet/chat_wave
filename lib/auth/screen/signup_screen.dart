@@ -5,17 +5,13 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../widgets/auth_field.dart';
 
 class SignupScreen extends StatefulWidget {
-  SignupScreen({super.key});
+  const SignupScreen({super.key});
 
   static Route get route {
     return MaterialPageRoute(
-      builder: (context) => SignupScreen(),
+      builder: (context) => const SignupScreen(),
     );
   }
-
-  final nameFieldController = TextEditingController();
-  final usernameFieldController = TextEditingController();
-  final passwordFieldController = TextEditingController();
 
   @override
   State<SignupScreen> createState() => _SignupScreenState();
@@ -38,36 +34,43 @@ class _SignupScreenState extends State<SignupScreen> {
                 Navigator.of(context).pop();
               }
             },
-            buildWhen: (previous, current) => false,
             builder: (context, state) {
               return Column(
                 children: <Widget>[
                   SizedBox(height: screenHeight * 0.4),
                   AuthField(
                     title: 'Name',
-                    controller: widget.nameFieldController,
                     textInputAction: TextInputAction.next,
+                    onValueChange: (newValue) =>
+                        BlocProvider.of<SignupBloc>(context).add(
+                      NameFieldChanged(newValue),
+                    ),
+                    errorText: (state is NotSignedUp)
+                        ? state.signupFieldsState.nameError
+                        : null,
+                    enabled: state is NotSignedUp,
                   ),
                   const SizedBox(height: 16.0),
-                  BlocBuilder<SignupBloc, SignupState>(
-                    builder: (context, state) {
-                      String? fieldError;
-                      if (state is SignupFailed) {
-                        fieldError = "usernam already exists";
-                      }
-                      return AuthField(
-                        title: 'Username',
-                        controller: widget.usernameFieldController,
-                        errorText: fieldError,
-                        textInputAction: TextInputAction.next,
-                      );
-                    },
+                  AuthField(
+                    title: 'Username',
+                    onValueChange: (newValue) =>
+                        BlocProvider.of<SignupBloc>(context).add(
+                      UsernameFieldChanged(newValue),
+                    ),
+                    errorText: (state is NotSignedUp)
+                        ? state.signupFieldsState.usernameError
+                        : null,
+                    textInputAction: TextInputAction.next,
+                    enabled: state is NotSignedUp,
                   ),
                   const SizedBox(height: 16.0),
                   AuthField(
                     title: 'Password',
-                    controller: widget.passwordFieldController,
                     obsecureText: _hidePassword,
+                    onValueChange: (newValue) =>
+                        BlocProvider.of<SignupBloc>(context).add(
+                      PasswordFieldChanged(newValue),
+                    ),
                     trailingIcon: IconButton(
                       onPressed: _toggleShowPassword,
                       icon: Icon(
@@ -75,17 +78,15 @@ class _SignupScreenState extends State<SignupScreen> {
                       ),
                       splashRadius: 16,
                     ),
+                    errorText: (state is NotSignedUp)
+                        ? state.signupFieldsState.passwordError
+                        : null,
+                    enabled: state is NotSignedUp,
                   ),
                   const SizedBox(height: 40),
                   IconButton(
-                    onPressed: () {
-                      BlocProvider.of<SignupBloc>(context).add(
-                        SignUserUp(
-                            name: widget.nameFieldController.text,
-                            username: widget.usernameFieldController.text,
-                            password: widget.passwordFieldController.text),
-                      );
-                    },
+                    onPressed: () =>
+                        BlocProvider.of<SignupBloc>(context).add(Submit()),
                     icon: const Icon(Icons.arrow_forward_ios),
                   ),
                 ],

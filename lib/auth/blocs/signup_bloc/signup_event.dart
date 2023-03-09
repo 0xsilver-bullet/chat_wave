@@ -1,5 +1,6 @@
 part of 'signup_bloc.dart';
 
+@immutable
 abstract class SignupEvent extends Equatable {
   const SignupEvent();
 
@@ -7,22 +8,31 @@ abstract class SignupEvent extends Equatable {
   List<Object> get props => [];
 }
 
-@immutable
-class SignUserUp extends SignupEvent {
-  const SignUserUp({
-    required this.name,
-    required this.username,
-    required this.password,
-  });
+class NameFieldChanged extends SignupEvent {
+  const NameFieldChanged([this.value = '']);
 
-  final String name;
-  final String username;
-  final String password;
+  final String value;
 
   @override
-  List<Object> get props => [
-        name,
-        username,
-        password,
-      ];
+  List<Object> get props => [value];
 }
+
+class UsernameFieldChanged extends SignupEvent {
+  const UsernameFieldChanged([this.value = '']);
+
+  final String value;
+
+  @override
+  List<Object> get props => [value];
+}
+
+class PasswordFieldChanged extends SignupEvent {
+  const PasswordFieldChanged([this.value = '']);
+
+  final String value;
+
+  @override
+  List<Object> get props => [value];
+}
+
+class Submit extends SignupEvent {}
