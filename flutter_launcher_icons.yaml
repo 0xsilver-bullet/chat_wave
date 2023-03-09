@@ -1,0 +1,7 @@
+flutter_icons:
+  image_path_android: "assets/images/splash_image.png"
+  image_path_ios: "assets/images/splash_image.png"
+  android: true
+  ios: true
+  min_sdk_android: 18
+  remove_alpha_ios: true
