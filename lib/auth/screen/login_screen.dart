@@ -27,12 +27,7 @@ class _LoginScreenState extends State<LoginScreen> {
           child: SizedBox(
             height: screenHeight,
             width: double.infinity,
-            child: BlocConsumer<LoginBloc, LoginState>(
-              listener: (context, state) {
-                if (state is LoggedIn) {
-                  Navigator.of(context).pushReplacement(HomeScreen.route);
-                }
-              },
+            child: BlocBuilder<LoginBloc, LoginState>(
               builder: (context, state) {
                 return Column(
                   children: [
@@ -77,6 +72,14 @@ class _LoginScreenState extends State<LoginScreen> {
                           Colors.grey,
                       onClick: () =>
                           BlocProvider.of<LoginBloc>(context).add(Submit()),
+                      lockEnabled: (state is NotLoggedIn)
+                          ? state.loginFieldsState.username.isValid &&
+                              state.loginFieldsState.password.isValid
+                          : false,
+                      locked: state is! LoggedIn,
+                      onLockOpenCallback: () {
+                        Navigator.of(context).pushReplacement(HomeScreen.route);
+                      },
                     ),
                     const Expanded(child: SizedBox()),
                     InkWell(

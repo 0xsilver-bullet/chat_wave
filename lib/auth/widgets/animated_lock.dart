@@ -5,57 +5,92 @@ class AnimatedLock extends StatefulWidget {
     super.key,
     required this.color,
     required this.onClick,
+    this.lockEnabled = false,
+    this.locked = true,
+    this.onLockOpenCallback,
   });
 
   final Color color;
   final VoidCallback onClick;
+  final bool lockEnabled;
+  final bool locked;
+  final VoidCallback? onLockOpenCallback;
 
   @override
   State<AnimatedLock> createState() => _AnimatedLockState();
 }
 
 class _AnimatedLockState extends State<AnimatedLock>
-    with SingleTickerProviderStateMixin {
-  late Animation<double> animation;
-  late AnimationController controller;
+    with TickerProviderStateMixin {
+  late Animation<double> boltAnimation;
+  late Animation<double> scaleAnimation;
+  late AnimationController boltAnimationController;
+  late AnimationController scaleAnimationController;
 
   @override
   void initState() {
-    controller = AnimationController(
+    boltAnimationController = AnimationController(
       vsync: this,
       duration: const Duration(milliseconds: 750),
     );
-    Tween<double> scaleTween = Tween(begin: 1.0, end: 0.0);
-    animation = scaleTween.animate(controller)
+    scaleAnimationController = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 250),
+    );
+    Tween<double> boltTween = Tween(begin: 1.0, end: 0.0);
+    boltAnimation = boltTween.animate(boltAnimationController)
       ..addListener(() {
         setState(() {});
       });
-
-    Future.delayed(const Duration(seconds: 2), () {
-      controller.forward();
-    });
-
+    Tween<double> scaleTween = Tween(begin: 0.8, end: 1.2);
+    scaleAnimation = scaleTween.animate(scaleAnimationController);
     super.initState();
   }
 
   @override
+  void didUpdateWidget(covariant AnimatedLock oldWidget) {
+    if (widget.lockEnabled && !scaleAnimationController.isCompleted) {
+      scaleAnimationController.forward();
+    }
+    if (!widget.lockEnabled && scaleAnimationController.isCompleted) {
+      scaleAnimationController.reverse();
+    }
+    if (!widget.locked && !boltAnimationController.isCompleted) {
+      boltAnimationController.forward().whenComplete(
+        () {
+          if (widget.onLockOpenCallback != null) {
+            widget.onLockOpenCallback!();
+          }
+        },
+      );
+    } else if (widget.locked && boltAnimationController.isCompleted) {
+      boltAnimationController.reverse();
+    }
+    super.didUpdateWidget(oldWidget);
+  }
+
+  @override
   void dispose() {
-    controller.dispose();
+    boltAnimationController.dispose();
+    scaleAnimationController.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      height: 48,
-      width: 48,
-      child: InkWell(
-        onTap: widget.onClick,
-        borderRadius: const BorderRadius.all(Radius.circular(12)),
-        child: CustomPaint(
-          painter: LockPainter(
-            lockScale: animation.value,
-            color: widget.color,
+    return ScaleTransition(
+      scale: scaleAnimation,
+      child: SizedBox(
+        height: 48,
+        width: 48,
+        child: InkWell(
+          onTap: widget.onClick,
+          borderRadius: const BorderRadius.all(Radius.circular(12)),
+          child: CustomPaint(
+            painter: LockPainter(
+              lockScale: boltAnimation.value,
+              color: widget.color,
+            ),
           ),
         ),
       ),
