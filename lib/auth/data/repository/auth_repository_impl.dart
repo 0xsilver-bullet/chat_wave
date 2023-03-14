@@ -1,17 +1,17 @@
 import 'dart:convert';
-import 'package:chat_wave/auth/data/network/dto/tokens_dto.dart';
+import 'package:http/http.dart' as http;
+import 'package:chat_wave/auth/data/network/response/login_response.dart';
 import 'package:chat_wave/auth/domain/errors/login_failure.dart';
 import 'package:chat_wave/auth/domain/errors/signup_failure.dart';
-import 'package:chat_wave/core/data/secure_local_storage_impl.dart';
 import 'package:chat_wave/auth/domain/repository/auth_repository.dart';
-import 'package:http/http.dart' as http;
+import 'package:chat_wave/core/data/secure_local_storage_impl.dart';
 
 class AuthRepositoryImpl implements AuthRepository {
   final _storage = SecureStorageImpl();
 
   @override
   Future<bool> login(String username, String password) async {
-    final url = Uri.parse('http://192.168.1.2:8080/auth/login');
+    final url = Uri.parse('http://192.168.1.4:8080/auth/login');
     final body = jsonEncode(
       {
         'username': username,
@@ -42,7 +42,9 @@ class AuthRepositoryImpl implements AuthRepository {
       }
     }
 
-    final tokens = TokensDto.fromJson(json);
+    final loginResponse = LoginResponse.fromJson(json);
+
+    final tokens = loginResponse.tokens;
     await _storage.saveToken(tokens.accessToken);
     await _storage.saveRefreshToken(tokens.refreshToken);
     return true;
@@ -50,7 +52,7 @@ class AuthRepositoryImpl implements AuthRepository {
 
   @override
   Future<bool> signup(String name, String username, String password) async {
-    final url = Uri.parse('http://192.168.1.2:8080/auth/signup');
+    final url = Uri.parse('http://192.168.1.4:8080/auth/signup');
     final body = jsonEncode(
       {
         'name': name,
