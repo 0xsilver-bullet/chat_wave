@@ -1,5 +1,6 @@
 import 'package:chat_wave/home/screens/home_screen.dart';
 import 'package:chat_wave/utils/bloc/app_bloc.dart';
+import 'package:chat_wave/utils/locator.dart';
 import 'package:flutter/material.dart';
 import 'package:chat_wave/theme.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -9,6 +10,7 @@ import 'auth/screen/auth_screens.dart';
 void main() {
   WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
   FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
+  setupServiceLocator();
   runApp(const ChatWaveApp());
 }
 

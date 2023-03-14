@@ -1,20 +1,15 @@
 import 'dart:convert';
-import 'package:chat_wave/auth/data/network/response/signup_response.dart';
+import 'package:chat_wave/core/domain/secure_local_storage.dart';
+import 'package:chat_wave/utils/locator.dart';
 import 'package:dio/dio.dart';
 import 'package:chat_wave/auth/data/network/response/login_response.dart';
 import 'package:chat_wave/auth/domain/errors/login_failure.dart';
 import 'package:chat_wave/auth/domain/errors/signup_failure.dart';
 import 'package:chat_wave/auth/domain/repository/auth_repository.dart';
-import 'package:chat_wave/core/data/secure_local_storage_impl.dart';
 
 class AuthRepositoryImpl implements AuthRepository {
-  final _storage = SecureStorageImpl();
-  final _dio = Dio();
-
-  AuthRepositoryImpl() {
-    _dio.options.validateStatus = (_) => true;
-    _dio.options.responseType = ResponseType.json;
-  }
+  final _storage = locator<SecureStorage>();
+  final _dio = locator<Dio>();
 
   @override
   Future<bool> login(String username, String password) async {

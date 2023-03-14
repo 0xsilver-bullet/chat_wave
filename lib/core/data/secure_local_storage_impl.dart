@@ -1,8 +1,9 @@
 import 'package:chat_wave/core/domain/secure_local_storage.dart';
+import 'package:chat_wave/utils/locator.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 class SecureStorageImpl implements SecureStorage {
-  final _storage = const FlutterSecureStorage();
+  final _storage = locator<FlutterSecureStorage>();
 
   @override
   Future<String?> getAccessToken() async {
