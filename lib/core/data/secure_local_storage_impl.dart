@@ -40,4 +40,10 @@ class SecureStorageImpl implements SecureStorage {
       value: accessToken,
     );
   }
+
+  @override
+  Future<void> deleteTokens() async {
+    await _storage.delete(key: SecureStorage.tokenKey);
+    return await _storage.delete(key: SecureStorage.refreshTokenKey);
+  }
 }

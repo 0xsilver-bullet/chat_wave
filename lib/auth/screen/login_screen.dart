@@ -8,6 +8,12 @@ import 'auth_screens.dart';
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
 
+  static Route get route {
+    return MaterialPageRoute(
+      builder: (_) => const LoginScreen(),
+    );
+  }
+
   @override
   State<LoginScreen> createState() => _LoginScreenState();
 }

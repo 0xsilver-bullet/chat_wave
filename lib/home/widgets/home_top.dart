@@ -5,10 +5,12 @@ class HomeTop extends StatelessWidget {
     super.key,
     required this.onAddClick,
     required this.onShareClick,
+    required this.onSettingsClick,
   });
 
   final VoidCallback onAddClick;
   final VoidCallback onShareClick;
+  final VoidCallback onSettingsClick;
 
   @override
   Widget build(BuildContext context) {
@@ -25,12 +27,17 @@ class HomeTop extends StatelessWidget {
             mainAxisSize: MainAxisSize.min,
             children: [
               IconButton(
-                onPressed: () {},
+                onPressed: onSettingsClick,
+                icon: const Icon(Icons.settings),
+                splashRadius: 18,
+              ),
+              IconButton(
+                onPressed: onShareClick,
                 icon: const Icon(Icons.ios_share),
                 splashRadius: 18,
               ),
               IconButton(
-                onPressed: () {},
+                onPressed: onAddClick,
                 icon: const Icon(Icons.add),
                 splashRadius: 18,
               ),

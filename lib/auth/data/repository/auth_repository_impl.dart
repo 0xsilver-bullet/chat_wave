@@ -86,4 +86,15 @@ class AuthRepositoryImpl implements AuthRepository {
         throw UnknownSignupError();
     }
   }
+
+  @override
+  Future<bool> logout() async {
+    final response = await _dio.post('http://192.168.1.4:8080/auth/logout');
+    if (response.statusCode == 200) {
+      await _storage.deleteTokens();
+      return true;
+    }
+    // then logout has failed
+    return false;
+  }
 }

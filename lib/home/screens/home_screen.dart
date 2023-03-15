@@ -23,6 +23,7 @@ class HomeScreen extends StatelessWidget {
             HomeTop(
               onAddClick: () {},
               onShareClick: () {},
+              onSettingsClick: () {},
             ),
             const SizedBox(height: 18),
             _searchField(context),
