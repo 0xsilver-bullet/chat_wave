@@ -1,10 +1,12 @@
 import 'dart:async';
 import 'dart:convert';
 
+import 'package:dio/dio.dart';
+
 import 'package:chat_wave/core/domain/secure_local_storage.dart';
 import 'package:chat_wave/core/domain/token_manager.dart';
 import 'package:chat_wave/utils/locator.dart';
-import 'package:dio/dio.dart';
+import 'network/b_wave_api.dart';
 
 class TokenManagerImpl extends TokenManager {
   final storage = locator<SecureStorage>();
@@ -40,7 +42,7 @@ class TokenManagerImpl extends TokenManager {
         },
       );
       final response = await client.post(
-        'http://192.168.1.4:8080/auth/refresh',
+        '${BWaveApi.baseUrl}auth/refresh',
         data: refreshTokenRequest,
       );
       if (response.statusCode == 200) {
@@ -60,7 +62,6 @@ class TokenManagerImpl extends TokenManager {
         _isRefreshing = false;
         _completer!.complete(false);
         _completer = null;
-        print('failed to refresh token');
         return false;
       }
     } else {
@@ -68,6 +69,22 @@ class TokenManagerImpl extends TokenManager {
       final successful = await _completer!.future;
       return successful;
     }
+  }
+
+  // TODO: If we try to remove the tokens while we are actully refreshing the token, somehting might go wrong and you need to think about this.
+  @override
+  Future<void> saveTokens(String accessToken, String refreshToken) async {
+    _accessToken = accessToken;
+    _refreshToken = refreshToken;
+    await storage.saveToken(accessToken);
+    return await storage.saveRefreshToken(refreshToken);
+  }
+
+  @override
+  Future<void> deleteTokens() async {
+    _accessToken = null;
+    _refreshToken = null;
+    return await storage.deleteTokens();
   }
 
   @override

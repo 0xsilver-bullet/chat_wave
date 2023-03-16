@@ -1,5 +1,6 @@
 import 'dart:convert';
-import 'package:chat_wave/core/domain/secure_local_storage.dart';
+import 'package:chat_wave/core/data/network/b_wave_api.dart';
+import 'package:chat_wave/core/domain/token_manager.dart';
 import 'package:chat_wave/utils/locator.dart';
 import 'package:dio/dio.dart';
 import 'package:chat_wave/auth/data/network/response/login_response.dart';
@@ -8,7 +9,7 @@ import 'package:chat_wave/auth/domain/errors/signup_failure.dart';
 import 'package:chat_wave/auth/domain/repository/auth_repository.dart';
 
 class AuthRepositoryImpl implements AuthRepository {
-  final _storage = locator<SecureStorage>();
+  final _tokenManager = locator<TokenManager>();
   final _dio = locator<Dio>();
 
   @override
@@ -20,7 +21,7 @@ class AuthRepositoryImpl implements AuthRepository {
       },
     );
     final response = await _dio.post(
-      'http://192.168.1.4:8080/auth/login',
+      '${BWaveApi.baseUrl}auth/login',
       data: body,
       options: Options(
         headers: {
@@ -48,8 +49,7 @@ class AuthRepositoryImpl implements AuthRepository {
     final loginResponse = LoginResponse.fromJson(json);
 
     final tokens = loginResponse.tokens;
-    await _storage.saveToken(tokens.accessToken);
-    await _storage.saveRefreshToken(tokens.refreshToken);
+    await _tokenManager.saveTokens(tokens.accessToken, tokens.refreshToken);
     return true;
   }
 
@@ -63,7 +63,7 @@ class AuthRepositoryImpl implements AuthRepository {
       },
     );
     final response = await _dio.post(
-      'http://192.168.1.4:8080/auth/signup',
+      '${BWaveApi.baseUrl}auth/signup',
       data: body,
       options: Options(
         headers: {
@@ -89,9 +89,9 @@ class AuthRepositoryImpl implements AuthRepository {
 
   @override
   Future<bool> logout() async {
-    final response = await _dio.post('http://192.168.1.4:8080/auth/logout');
+    final response = await _dio.post('${BWaveApi.baseUrl}auth/logout');
     if (response.statusCode == 200) {
-      await _storage.deleteTokens();
+      await _tokenManager.deleteTokens();
       return true;
     }
     // then logout has failed
