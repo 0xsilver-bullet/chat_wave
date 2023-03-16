@@ -1,5 +1,7 @@
 import 'package:bloc/bloc.dart';
-import 'package:chat_wave/core/data/secure_local_storage_impl.dart';
+
+import 'package:chat_wave/core/domain/token_manager.dart';
+import 'package:chat_wave/utils/locator.dart';
 import 'package:equatable/equatable.dart';
 
 part 'app_event.dart';
@@ -11,13 +13,13 @@ class AppBloc extends Bloc<AppEvent, AppState> {
     add(InitializeAppState());
   }
 
-  final storage = SecureStorageImpl();
+  final _tokenManager = locator<TokenManager>();
 
   Future<void> _handleInitializingAppState(
     InitializeAppState event,
     Emitter<AppState> emit,
   ) async {
-    final hasRefreshToken = await storage.hasRefreshToken();
+    final hasRefreshToken = _tokenManager.refreshToken != null;
     if (hasRefreshToken) {
       emit(AppAuthenticated());
     } else {
