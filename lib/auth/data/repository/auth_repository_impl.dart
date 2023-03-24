@@ -1,42 +1,20 @@
-import 'dart:convert';
-import 'package:chat_wave/core/data/network/b_wave_api.dart';
+import 'package:chat_wave/auth/data/network/auth_api_client.dart';
 import 'package:chat_wave/core/domain/token_manager.dart';
 import 'package:chat_wave/utils/locator.dart';
-import 'package:dio/dio.dart';
-import 'package:chat_wave/auth/data/network/response/login_response.dart';
 import 'package:chat_wave/auth/domain/errors/login_failure.dart';
 import 'package:chat_wave/auth/domain/errors/signup_failure.dart';
 import 'package:chat_wave/auth/domain/repository/auth_repository.dart';
 
 class AuthRepositoryImpl implements AuthRepository {
   final _tokenManager = locator<TokenManager>();
-  final _dio = locator<Dio>();
+  final api = AuthApiClient();
 
   @override
   Future<bool> login(String username, String password) async {
-    final body = jsonEncode(
-      {
-        'username': username,
-        'password': password,
-      },
-    );
-    final response = await _dio.post(
-      '${BWaveApi.baseUrl}auth/login',
-      data: body,
-      options: Options(
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      ),
-    );
-    final json = response.data;
-
-    if (response.statusCode != 200) {
-      final errorCode = json['errorCode'] as int?;
-      if (errorCode == null) {
-        throw UnknownLoginError();
-      }
-      switch (errorCode) {
+    final apiResonse = await api.login(username, password);
+    if (!apiResonse.isSuccessful) {
+      // request has failed, error must be initialized
+      switch (apiResonse.error?.errorCode ?? 0) {
         case LoginFailure.userNotFound:
           throw UserNotFound();
         case LoginFailure.invalidCredentials:
@@ -45,41 +23,25 @@ class AuthRepositoryImpl implements AuthRepository {
           throw UnknownLoginError();
       }
     }
-
-    final loginResponse = LoginResponse.fromJson(json);
-
-    final tokens = loginResponse.tokens;
+    if (apiResonse.data == null) {
+      throw UnknownLoginError();
+    }
+    final tokens = apiResonse.data!.tokens;
     await _tokenManager.saveTokens(tokens.accessToken, tokens.refreshToken);
     return true;
   }
 
   @override
   Future<bool> signup(String name, String username, String password) async {
-    final body = jsonEncode(
-      {
-        'name': name,
-        'username': username,
-        'password': password,
-      },
-    );
-    final response = await _dio.post(
-      '${BWaveApi.baseUrl}auth/signup',
-      data: body,
-      options: Options(
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      ),
-    );
-    if (response.statusCode == 200) return true;
+    final apiResponse = await api.signup(name, username, password);
+
+    if (apiResponse.isSuccessful) return true;
     // Then request has failed
-    // extract error code and throw a SignupFailure exception
-    final jsonResponse = response.data;
-    final errorCode = jsonResponse['errorCode'] as int?;
-    if (errorCode == null) {
+    final error = apiResponse.error;
+    if (error == null) {
       throw UnknownSignupError();
     }
-    switch (errorCode) {
+    switch (error.errorCode) {
       case SignupFailure.usernameAlreadyExistsCode:
         throw UsernameAlreadyExists();
       default:
@@ -89,8 +51,8 @@ class AuthRepositoryImpl implements AuthRepository {
 
   @override
   Future<bool> logout() async {
-    final response = await _dio.post('${BWaveApi.baseUrl}auth/logout');
-    if (response.statusCode == 200) {
+    final apiResponse = await api.logout();
+    if (apiResponse.isSuccessful) {
       await _tokenManager.deleteTokens();
       return true;
     }

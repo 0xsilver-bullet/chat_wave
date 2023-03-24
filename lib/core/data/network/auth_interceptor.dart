@@ -16,6 +16,7 @@ class AuthInterceptor extends Interceptor {
     RequestOptions options,
     RequestInterceptorHandler handler,
   ) {
+    options.headers['Content-Type'] = 'application/json';
     final accessToken = tokenManager.accessToken;
     if (accessToken != null) {
       // just attach the access token
