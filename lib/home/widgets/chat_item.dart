@@ -8,9 +8,11 @@ import 'package:faker/faker.dart';
 class ChatItem extends StatelessWidget {
   const ChatItem({
     super.key,
+    required this.name,
     this.onClick,
   });
 
+  final String name;
   final VoidCallback? onClick;
 
   @override
@@ -37,7 +39,7 @@ class ChatItem extends StatelessWidget {
                     children: [
                       Expanded(
                         child: Text(
-                          faker.person.name(),
+                          name,
                           style: Theme.of(context).textTheme.displayMedium,
                           overflow: TextOverflow.ellipsis,
                         ),

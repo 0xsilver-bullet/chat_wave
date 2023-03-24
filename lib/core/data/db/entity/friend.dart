@@ -1,6 +1,6 @@
 import 'package:floor/floor.dart';
 
-@Entity(tableName: 'friends')
+@entity
 class Friend {
   Friend(
       {required this.name,

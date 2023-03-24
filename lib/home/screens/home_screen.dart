@@ -1,5 +1,7 @@
 import 'package:chat_wave/chat/screens/chat_screen.dart';
+import 'package:chat_wave/home/blocs/friends_bloc/friends_bloc.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../widgets/widgets.dart';
 
@@ -29,13 +31,23 @@ class HomeScreen extends StatelessWidget {
             _searchField(context),
             const SizedBox(height: 4.0),
             Expanded(
-              child: ListView.builder(
-                itemCount: 100000,
-                itemBuilder: (context, index) {
-                  return ChatItem(
-                    onClick: () => Navigator.of(context).push(ChatScreen.route),
-                  );
-                },
+              child: BlocProvider(
+                create: (_) => FriendsBloc(),
+                child: BlocBuilder<FriendsBloc, FriendsState>(
+                  builder: (ctx, state) {
+                    final friends = (state as FriendsList).friends;
+                    return ListView.builder(
+                      itemCount: friends.length,
+                      itemBuilder: (_, index) {
+                        return ChatItem(
+                          name: friends[index].name,
+                          onClick: () =>
+                              Navigator.of(context).push(ChatScreen.route),
+                        );
+                      },
+                    );
+                  },
+                ),
               ),
             )
           ],

@@ -85,7 +85,7 @@ class _$ChatWaveDb extends ChatWaveDb {
       },
       onCreate: (database, version) async {
         await database.execute(
-            'CREATE TABLE IF NOT EXISTS `friends` (`name` TEXT NOT NULL, `username` TEXT NOT NULL, `profile_pic_url` TEXT, `id` INTEGER NOT NULL, PRIMARY KEY (`id`))');
+            'CREATE TABLE IF NOT EXISTS `Friend` (`name` TEXT NOT NULL, `username` TEXT NOT NULL, `profile_pic_url` TEXT, `id` INTEGER NOT NULL, PRIMARY KEY (`id`))');
 
         await callback?.onCreate?.call(database, version);
       },
@@ -106,7 +106,7 @@ class _$FriendDao extends FriendDao {
   )   : _queryAdapter = QueryAdapter(database, changeListener),
         _friendInsertionAdapter = InsertionAdapter(
             database,
-            'friends',
+            'Friend',
             (Friend item) => <String, Object?>{
                   'name': item.name,
                   'username': item.username,
