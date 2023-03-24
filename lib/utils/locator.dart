@@ -1,3 +1,4 @@
+import 'package:chat_wave/core/data/db/chat_wave_db.dart';
 import 'package:chat_wave/core/data/network/auth_interceptor.dart';
 import 'package:chat_wave/core/data/secure_local_storage_impl.dart';
 import 'package:chat_wave/core/data/token_manager_impl.dart';
@@ -23,6 +24,12 @@ void setupServiceLocator() {
   locator.registerSingletonWithDependencies(
     () => AuthInterceptor(),
     dependsOn: [TokenManager],
+  );
+
+  locator.registerSingletonAsync<ChatWaveDb>(
+    () async {
+      return await ChatWaveDb.initializeDb();
+    },
   );
 }
 
