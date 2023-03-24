@@ -30,11 +30,16 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
     if (state is LoginLoading || state is LoginLoading) {
       return;
     }
-    final fieldsState = (state as NotLoggedIn).loginFieldsState.copyWith(
+    final current = (state as NotLoggedIn).loginFieldsState;
+    emit(
+      NotLoggedIn(
+        loginFieldsState: current.copyWith(
           username: Username.dirty(event.value),
           usernameError: null,
-        );
-    emit(NotLoggedIn(loginFieldsState: fieldsState));
+          passwordError: current.passwordError,
+        ),
+      ),
+    );
   }
 
   Future<void> _handlePasswordFieldChanged(
@@ -44,11 +49,16 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
     if (state is LoginLoading || state is LoginLoading) {
       return;
     }
-    final fieldsState = (state as NotLoggedIn).loginFieldsState.copyWith(
+    final current = (state as NotLoggedIn).loginFieldsState;
+    emit(
+      NotLoggedIn(
+        loginFieldsState: current.copyWith(
           password: Password.dirty(event.value),
           passwordError: null,
-        );
-    emit(NotLoggedIn(loginFieldsState: fieldsState));
+          usernameError: current.usernameError,
+        ),
+      ),
+    );
   }
 
   Future<void> _handleSubmitEvent(

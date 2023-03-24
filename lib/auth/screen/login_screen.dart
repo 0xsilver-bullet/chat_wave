@@ -58,6 +58,8 @@ class _LoginScreenState extends State<LoginScreen> {
                           BlocProvider.of<LoginBloc>(context).add(
                         PasswordFieldChanged(newValue),
                       ),
+                      onSubmitted: (_) =>
+                          BlocProvider.of<LoginBloc>(context).add(Submit()),
                       trailingIcon: IconButton(
                         onPressed: _toggleShowPassword,
                         icon: Icon(

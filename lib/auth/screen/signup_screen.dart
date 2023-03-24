@@ -71,6 +71,8 @@ class _SignupScreenState extends State<SignupScreen> {
                         BlocProvider.of<SignupBloc>(context).add(
                       PasswordFieldChanged(newValue),
                     ),
+                    onSubmitted: (_) =>
+                        BlocProvider.of<SignupBloc>(context).add(Submit()),
                     trailingIcon: IconButton(
                       onPressed: _toggleShowPassword,
                       icon: Icon(
