@@ -1,14 +1,10 @@
+import 'package:chat_wave/core/domain/model/message.dart';
 import 'package:flutter/material.dart';
 
 class MessageItem extends StatelessWidget {
-  const MessageItem({
-    super.key,
-    required this.isOwnMessage,
-    required this.message,
-  });
+  const MessageItem({super.key, required this.message});
 
-  final bool isOwnMessage;
-  final String message;
+  final Message message;
 
   @override
   Widget build(BuildContext context) {
@@ -19,15 +15,17 @@ class MessageItem extends StatelessWidget {
         borderRadius: BorderRadius.only(
           topLeft: const Radius.circular(32),
           topRight: const Radius.circular(32),
-          bottomRight: isOwnMessage ? Radius.zero : const Radius.circular(32),
-          bottomLeft: isOwnMessage ? const Radius.circular(32) : Radius.zero,
+          bottomRight:
+              message.isOwnMessage ? Radius.zero : const Radius.circular(32),
+          bottomLeft:
+              message.isOwnMessage ? const Radius.circular(32) : Radius.zero,
         ),
         color: Colors.white,
       ),
       child: Padding(
         padding: const EdgeInsets.all(12),
         child: Text(
-          message,
+          message.text ?? '',
           style: Theme.of(context)
               .textTheme
               .bodySmall

@@ -1,3 +1,4 @@
+import 'package:chat_wave/core/domain/model/message.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/foundation.dart';
 
@@ -9,7 +10,7 @@ abstract class Channel extends Equatable {
   });
 
   final String channelName;
-  final String? lastMessage;
+  final Message? lastMessage;
 
   @override
   List<Object?> get props => [channelName, lastMessage];

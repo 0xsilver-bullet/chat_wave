@@ -1,6 +1,7 @@
 import 'package:flutter/foundation.dart';
 
 import 'channel.dart';
+import 'message.dart';
 
 @immutable
 class DmChannel extends Channel {
@@ -8,7 +9,7 @@ class DmChannel extends Channel {
     required this.friendName,
     required this.friendId,
     required this.online,
-    required String? lastMessage,
+    required Message? lastMessage,
   }) : super(channelName: friendName, lastMessage: lastMessage);
 
   final int friendId;

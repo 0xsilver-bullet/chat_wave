@@ -1,8 +1,8 @@
 import 'dart:async';
 
 import 'package:bloc/bloc.dart';
-import 'package:chat_wave/home/domain/model/channel.dart';
-import 'package:chat_wave/home/domain/model/dm_channel.dart';
+import 'package:chat_wave/core/domain/model/channel.dart';
+import 'package:chat_wave/core/domain/model/dm_channel.dart';
 import 'package:chat_wave/home/domain/repository/friend_repository.dart';
 import 'package:chat_wave/utils/locator.dart';
 import 'package:equatable/equatable.dart';

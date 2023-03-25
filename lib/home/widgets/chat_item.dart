@@ -5,7 +5,7 @@ import 'package:chat_wave/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:faker/faker.dart';
 
-import '../domain/model/channel.dart';
+import '../../core/domain/model/channel.dart';
 
 class ChatItem extends StatelessWidget {
   const ChatItem({
@@ -46,38 +46,40 @@ class ChatItem extends StatelessWidget {
                           overflow: TextOverflow.ellipsis,
                         ),
                       ),
-                      Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          const Icon(Icons.check, color: Colors.green),
-                          const SizedBox(width: 4.0),
-                          Text(
-                            '12:00',
-                            style: Theme.of(context).textTheme.bodySmall,
-                          )
-                        ],
-                      )
+                      if (channel.lastMessage != null)
+                        Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            const Icon(Icons.check, color: Colors.green),
+                            const SizedBox(width: 4.0),
+                            Text(
+                              channel.lastMessage?.formattedDate ?? '',
+                              style: Theme.of(context).textTheme.bodySmall,
+                            )
+                          ],
+                        )
                     ],
                   ),
                   const SizedBox(height: 4.0),
-                  RichText(
-                    overflow: TextOverflow.ellipsis,
-                    maxLines: 2,
-                    text: TextSpan(
-                      style: Theme.of(context).textTheme.bodySmall,
-                      children: [
-                        if (Random().nextBool())
-                          const TextSpan(
-                            text: 'You: ',
-                            style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              color: AppColors.textGrey,
+                  if (channel.lastMessage?.text != null)
+                    RichText(
+                      overflow: TextOverflow.ellipsis,
+                      maxLines: 2,
+                      text: TextSpan(
+                        style: Theme.of(context).textTheme.bodySmall,
+                        children: [
+                          if (Random().nextBool())
+                            const TextSpan(
+                              text: 'You: ',
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                color: AppColors.textGrey,
+                              ),
                             ),
-                          ),
-                        TextSpan(text: faker.lorem.sentence()),
-                      ],
+                          TextSpan(text: channel.lastMessage?.text),
+                        ],
+                      ),
                     ),
-                  ),
                 ],
               ),
             ),

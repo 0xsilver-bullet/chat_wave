@@ -1,14 +1,18 @@
-import 'dart:math';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:chat_wave/core/domain/model/channel.dart';
 import 'package:faker/faker.dart';
 import 'package:flutter/material.dart';
 
 class ChatTop extends StatelessWidget {
   const ChatTop({
     super.key,
+    required this.channel,
+    this.online,
     this.onCloseCallback,
   });
 
+  final Channel channel;
+  final bool? online;
   final VoidCallback? onCloseCallback;
 
   @override
@@ -30,13 +34,13 @@ class ChatTop extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  faker.person.name(),
+                  channel.channelName,
                   style: Theme.of(context).textTheme.displayMedium,
                   overflow: TextOverflow.ellipsis,
                   maxLines: 1,
                 ),
                 const SizedBox(height: 4.0),
-                if (Random().nextBool())
+                if (online ?? false)
                   Text(
                     'online',
                     style: Theme.of(context)

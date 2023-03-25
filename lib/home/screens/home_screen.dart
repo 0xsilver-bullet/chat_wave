@@ -41,8 +41,12 @@ class HomeScreen extends StatelessWidget {
                       itemBuilder: (_, index) {
                         return ChatItem(
                           channel: channels[index],
-                          onClick: () =>
-                              Navigator.of(context).push(ChatScreen.route),
+                          onClick: () => Navigator.of(context).push(
+                            MaterialPageRoute(
+                              builder: (context) =>
+                                  ChatScreen(channel: channels[index]),
+                            ),
+                          ),
                         );
                       },
                     );
