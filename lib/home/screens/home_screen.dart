@@ -1,5 +1,5 @@
 import 'package:chat_wave/chat/screens/chat_screen.dart';
-import 'package:chat_wave/home/blocs/friends_bloc/friends_bloc.dart';
+import 'package:chat_wave/home/blocs/channels_bloc/channels_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -32,15 +32,15 @@ class HomeScreen extends StatelessWidget {
             const SizedBox(height: 4.0),
             Expanded(
               child: BlocProvider(
-                create: (_) => FriendsBloc(),
-                child: BlocBuilder<FriendsBloc, FriendsState>(
+                create: (_) => ChannelsBloc(),
+                child: BlocBuilder<ChannelsBloc, ChannelsState>(
                   builder: (ctx, state) {
-                    final friends = (state as FriendsList).friends;
+                    final channels = (state as ChannelsList).channels;
                     return ListView.builder(
-                      itemCount: friends.length,
+                      itemCount: channels.length,
                       itemBuilder: (_, index) {
                         return ChatItem(
-                          name: friends[index].name,
+                          channel: channels[index],
                           onClick: () =>
                               Navigator.of(context).push(ChatScreen.route),
                         );

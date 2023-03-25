@@ -5,14 +5,16 @@ import 'package:chat_wave/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:faker/faker.dart';
 
+import '../domain/model/channel.dart';
+
 class ChatItem extends StatelessWidget {
   const ChatItem({
     super.key,
-    required this.name,
+    required this.channel,
     this.onClick,
   });
 
-  final String name;
+  final Channel channel;
   final VoidCallback? onClick;
 
   @override
@@ -39,7 +41,7 @@ class ChatItem extends StatelessWidget {
                     children: [
                       Expanded(
                         child: Text(
-                          name,
+                          channel.channelName,
                           style: Theme.of(context).textTheme.displayMedium,
                           overflow: TextOverflow.ellipsis,
                         ),
