@@ -27,6 +27,7 @@ dependencies:
   get_it: ^7.2.0
   floor: ^1.4.1
   sqflite: ^2.2.6
+  flutter_animated_dialog: ^2.0.1
 
 dev_dependencies:
   flutter_test:

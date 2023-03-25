@@ -34,7 +34,7 @@ void setupServiceLocator() {
     },
   );
 
-  locator.registerFactory<FriendRepository>(
+  locator.registerLazySingleton<FriendRepository>(
     () {
       final db = locator<ChatWaveDb>();
       return FriendRepositoryImpl(db);
