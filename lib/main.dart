@@ -1,3 +1,4 @@
+import 'package:chat_wave/core/event/events_bloc/events_bloc.dart';
 import 'package:chat_wave/home/screens/home_screen.dart';
 import 'package:chat_wave/utils/bloc/app_bloc.dart';
 import 'package:chat_wave/utils/locator.dart';
@@ -35,7 +36,11 @@ class ChatWaveApp extends StatelessWidget {
             if (state is AppNeedsAuthentication) {
               return const LoginScreen();
             } else if (state is AppAuthenticated) {
-              return HomeScreen();
+              return BlocProvider(
+                create: (context) => EventsBloc(),
+                lazy: false,
+                child: const HomeScreen(),
+              );
             } else {
               return Container();
             }

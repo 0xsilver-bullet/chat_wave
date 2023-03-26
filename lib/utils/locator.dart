@@ -4,6 +4,8 @@ import 'package:chat_wave/core/data/secure_local_storage_impl.dart';
 import 'package:chat_wave/core/data/token_manager_impl.dart';
 import 'package:chat_wave/core/domain/secure_local_storage.dart';
 import 'package:chat_wave/core/domain/token_manager.dart';
+import 'package:chat_wave/core/event/data/event_repository_impl.dart';
+import 'package:chat_wave/core/event/domain/event_repository.dart';
 import 'package:chat_wave/home/data/repository/friend_repository_impl.dart';
 import 'package:chat_wave/home/domain/repository/friend_repository.dart';
 import 'package:dio/dio.dart';
@@ -38,6 +40,13 @@ void setupServiceLocator() {
     () {
       final db = locator<ChatWaveDb>();
       return FriendRepositoryImpl(db);
+    },
+  );
+
+  locator.registerLazySingleton<EventRepository>(
+    () {
+      final tokenManager = locator<TokenManager>();
+      return EventRepositoryImpl(tokenManager);
     },
   );
 }

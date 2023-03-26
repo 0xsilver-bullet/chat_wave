@@ -1,4 +1,5 @@
 import 'package:chat_wave/auth/blocs/login_bloc/login_bloc.dart';
+import 'package:chat_wave/core/event/events_bloc/events_bloc.dart';
 import 'package:chat_wave/home/screens/home_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -86,7 +87,15 @@ class _LoginScreenState extends State<LoginScreen> {
                           : false,
                       locked: state is! LoggedIn,
                       onLockOpenCallback: () {
-                        Navigator.of(context).pushReplacement(HomeScreen.route);
+                        Navigator.of(context).pushReplacement(
+                          MaterialPageRoute(
+                            builder: (context) => BlocProvider(
+                              create: (_) => EventsBloc(),
+                              lazy: false,
+                              child: const HomeScreen(),
+                            ),
+                          ),
+                        );
                       },
                     ),
                     const Expanded(child: SizedBox()),

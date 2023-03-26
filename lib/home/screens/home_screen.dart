@@ -1,4 +1,5 @@
 import 'package:chat_wave/chat/screens/chat_screen.dart';
+import 'package:chat_wave/core/event/events_bloc/events_bloc.dart';
 import 'package:chat_wave/home/blocs/add_friend_bloc/add_friend_bloc.dart';
 import 'package:chat_wave/home/blocs/channels_bloc/channels_bloc.dart';
 import 'package:flutter/material.dart';
@@ -7,16 +8,42 @@ import 'package:flutter_animated_dialog/flutter_animated_dialog.dart';
 
 import '../widgets/widgets.dart';
 
-class HomeScreen extends StatelessWidget {
-  HomeScreen({super.key});
+class HomeScreen extends StatefulWidget {
+  const HomeScreen({super.key});
 
-  static Route get route {
-    return MaterialPageRoute(
-      builder: (context) => HomeScreen(),
-    );
+  @override
+  State<HomeScreen> createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
+  final _searchFieldController = TextEditingController();
+
+  @override
+  void initState() {
+    WidgetsBinding.instance.addObserver(this);
+    super.initState();
   }
 
-  final _searchFieldController = TextEditingController();
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    switch (state) {
+      case AppLifecycleState.resumed:
+        BlocProvider.of<EventsBloc>(context).add(Resume());
+        break;
+      case AppLifecycleState.paused:
+        BlocProvider.of<EventsBloc>(context).add(Pause());
+        break;
+      case AppLifecycleState.inactive:
+      case AppLifecycleState.detached:
+        break;
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
