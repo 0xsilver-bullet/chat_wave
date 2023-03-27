@@ -22,8 +22,13 @@ class Resume extends EventsEvent {}
 
 @immutable
 class SendDm extends EventsEvent {
-  const SendDm({required this.text, required this.receiverId});
+  const SendDm({
+    required this.text,
+    required this.receiverId,
+    required this.provisionalId,
+  });
 
   final String text;
   final int receiverId;
+  final String? provisionalId;
 }

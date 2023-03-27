@@ -1,3 +1,5 @@
+import 'package:chat_wave/chat/repository/dm_repository.dart';
+import 'package:chat_wave/chat/repository/dm_repository_impl.dart';
 import 'package:chat_wave/core/data/db/chat_wave_db.dart';
 import 'package:chat_wave/core/data/network/auth_interceptor.dart';
 import 'package:chat_wave/core/data/secure_local_storage_impl.dart';
@@ -46,7 +48,16 @@ void setupServiceLocator() {
   locator.registerLazySingleton<EventRepository>(
     () {
       final tokenManager = locator<TokenManager>();
-      return EventRepositoryImpl(tokenManager);
+      final db = locator<ChatWaveDb>();
+      return EventRepositoryImpl(tokenManager, db.dmMessageDao);
+    },
+  );
+
+  locator.registerFactory<DmRepository>(
+    () {
+      final db = locator<ChatWaveDb>();
+      final storage = locator<SecureStorage>();
+      return DmRepositoryImpl(db.dmMessageDao, storage);
     },
   );
 }

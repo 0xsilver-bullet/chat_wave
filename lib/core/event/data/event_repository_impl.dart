@@ -1,16 +1,20 @@
 import 'dart:async';
+import 'dart:convert';
 
+import 'package:chat_wave/core/data/db/dao/dm_message_dao.dart';
 import 'package:chat_wave/core/data/network/b_wave_api.dart';
 import 'package:chat_wave/core/domain/token_manager.dart';
 import 'package:chat_wave/core/event/domain/model/client_event.dart';
+import 'package:chat_wave/core/event/domain/model/server_event.dart';
 import 'package:web_socket_channel/io.dart';
 
 import '../domain/event_repository.dart';
 
 class EventRepositoryImpl extends EventRepository {
-  EventRepositoryImpl(this._tokenManager);
+  EventRepositoryImpl(this._tokenManager, this._dmDao);
 
   final TokenManager _tokenManager;
+  final DmMessageDao _dmDao;
 
   IOWebSocketChannel? _channel;
   StreamSubscription? _subscription;
@@ -55,11 +59,6 @@ class EventRepositoryImpl extends EventRepository {
     _subscription = null;
   }
 
-  void _handleEvent(dynamic event) {
-    // TODO: remove this print statement form here.
-    print(event);
-  }
-
   @override
   bool emitClientEvent(ClientEvent event) {
     if (_channel == null) return false;
@@ -70,5 +69,12 @@ class EventRepositoryImpl extends EventRepository {
     } catch (e) {
       return false;
     }
+  }
+
+  void _handleEvent(dynamic event) {
+    final eventJson = jsonDecode(event);
+    final serverEvent = ServerEvent.parse(eventJson);
+    // TODO: you need to handle the event and remove the print statement.
+    print(eventJson);
   }
 }

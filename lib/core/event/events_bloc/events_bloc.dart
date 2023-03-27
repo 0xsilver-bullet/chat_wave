@@ -51,7 +51,7 @@ class EventsBloc extends Bloc<EventsEvent, EventsState> {
     final sendDmEvent = SendDmMessageEvent(
       text: event.text,
       receiverId: event.receiverId,
-      provisionalId: null,
+      provisionalId: event.provisionalId,
     );
     repository.emitClientEvent(sendDmEvent);
   }

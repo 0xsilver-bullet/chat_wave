@@ -7,6 +7,29 @@ abstract class ServerEvent {
   const ServerEvent(this.event);
 
   final String event;
+
+  factory ServerEvent.parse(Map<String, dynamic> json) {
+    final eventName = json['event'];
+    switch (eventName) {
+      case DmSentEvent.eventName:
+        return DmSentEvent.fromJson(json);
+
+      case UpdateDmMessageEvent.eventName:
+        return UpdateDmMessageEvent.formJson(json);
+
+      case ConnectedToUserEvent.eventName:
+        return ConnectedToUserEvent.formJson(json);
+
+      case FriendOnlineStatusEvent.eventName:
+        return FriendOnlineStatusEvent.fromJson(json);
+
+      case ReceivedDmMessageEvent.eventName:
+        return ReceivedDmMessageEvent.fromJson(json);
+
+      default:
+        throw Exception('Unexpected event');
+    }
+  }
 }
 
 // To indicate that a message is sent successfully

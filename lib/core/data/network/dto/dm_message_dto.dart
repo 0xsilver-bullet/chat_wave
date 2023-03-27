@@ -21,5 +21,5 @@ class DmMessageDto {
   final int receiverId;
   final bool seen;
   final int timestamp;
-  final int id;
+  final String id;
 }

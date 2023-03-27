@@ -1,4 +1,5 @@
 import 'package:chat_wave/auth/data/network/auth_api_client.dart';
+import 'package:chat_wave/core/domain/secure_local_storage.dart';
 import 'package:chat_wave/core/domain/token_manager.dart';
 import 'package:chat_wave/utils/locator.dart';
 import 'package:chat_wave/auth/domain/errors/login_failure.dart';
@@ -8,6 +9,7 @@ import 'package:chat_wave/auth/domain/repository/auth_repository.dart';
 class AuthRepositoryImpl implements AuthRepository {
   final _tokenManager = locator<TokenManager>();
   final api = AuthApiClient();
+  final _storage = locator<SecureStorage>();
 
   @override
   Future<bool> login(String username, String password) async {
@@ -28,6 +30,8 @@ class AuthRepositoryImpl implements AuthRepository {
     }
     final tokens = apiResonse.data!.tokens;
     await _tokenManager.saveTokens(tokens.accessToken, tokens.refreshToken);
+    final userInfo = apiResonse.data!.userInfo;
+    await _storage.saveUserId(userInfo.id);
     return true;
   }
 

@@ -1,6 +1,7 @@
 abstract class SecureStorage {
   static const tokenKey = "access_token";
   static const refreshTokenKey = "refresh_token_key";
+  static const userIdKey = "user_id_key";
 
   Future<bool> hasToken();
 
@@ -15,4 +16,8 @@ abstract class SecureStorage {
   Future<String?> getRefreshToken();
 
   Future<void> deleteTokens();
+
+  Future<void> saveUserId(int userId);
+
+  Future<int?> getUserId();
 }

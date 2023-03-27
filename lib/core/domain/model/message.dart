@@ -12,7 +12,7 @@ abstract class Message extends Equatable {
   });
 
   final String id;
-  final String senderId;
+  final int senderId;
   final String? text;
   final String formattedDate;
   final bool isOwnMessage;

@@ -1,6 +1,5 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:chat_wave/core/domain/model/channel.dart';
-import 'package:faker/faker.dart';
 import 'package:flutter/material.dart';
 
 class ChatTop extends StatelessWidget {
@@ -21,10 +20,10 @@ class ChatTop extends StatelessWidget {
       padding: const EdgeInsets.all(12),
       child: Row(
         children: [
-          CircleAvatar(
+          const CircleAvatar(
             radius: 36,
             backgroundImage: CachedNetworkImageProvider(
-              faker.image.image(),
+              'https://h-o-m-e.org/wp-content/uploads/2022/04/Blank-Profile-Picture-1.jpg',
             ),
           ),
           const SizedBox(width: 12.0),

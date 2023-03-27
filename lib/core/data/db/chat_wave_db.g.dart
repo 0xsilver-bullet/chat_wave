@@ -63,6 +63,8 @@ class _$ChatWaveDb extends ChatWaveDb {
 
   FriendDao? _friendDaoInstance;
 
+  DmMessageDao? _dmMessageDaoInstance;
+
   Future<sqflite.Database> open(
     String path,
     List<Migration> migrations, [
@@ -86,6 +88,8 @@ class _$ChatWaveDb extends ChatWaveDb {
       onCreate: (database, version) async {
         await database.execute(
             'CREATE TABLE IF NOT EXISTS `Friend` (`name` TEXT NOT NULL, `username` TEXT NOT NULL, `profile_pic_url` TEXT, `id` INTEGER NOT NULL, PRIMARY KEY (`id`))');
+        await database.execute(
+            'CREATE TABLE IF NOT EXISTS `DmMessageEntity` (`id` TEXT NOT NULL, `text` TEXT, `sender_id` INTEGER NOT NULL, `receiver_id` INTEGER NOT NULL, `timestamp` INTEGER NOT NULL, `is_own_message` INTEGER NOT NULL, `seen` INTEGER NOT NULL, PRIMARY KEY (`id`))');
 
         await callback?.onCreate?.call(database, version);
       },
@@ -96,6 +100,11 @@ class _$ChatWaveDb extends ChatWaveDb {
   @override
   FriendDao get friendDao {
     return _friendDaoInstance ??= _$FriendDao(database, changeListener);
+  }
+
+  @override
+  DmMessageDao get dmMessageDao {
+    return _dmMessageDaoInstance ??= _$DmMessageDao(database, changeListener);
   }
 }
 
@@ -143,5 +152,78 @@ class _$FriendDao extends FriendDao {
   @override
   Future<void> insertAllFriends(List<Friend> friends) async {
     await _friendInsertionAdapter.insertList(friends, OnConflictStrategy.abort);
+  }
+}
+
+class _$DmMessageDao extends DmMessageDao {
+  _$DmMessageDao(
+    this.database,
+    this.changeListener,
+  )   : _queryAdapter = QueryAdapter(database, changeListener),
+        _dmMessageEntityInsertionAdapter = InsertionAdapter(
+            database,
+            'DmMessageEntity',
+            (DmMessageEntity item) => <String, Object?>{
+                  'id': item.id,
+                  'text': item.text,
+                  'sender_id': item.senderId,
+                  'receiver_id': item.receiverId,
+                  'timestamp': item.timestamp,
+                  'is_own_message': item.isOwnMessage ? 1 : 0,
+                  'seen': item.seen ? 1 : 0
+                },
+            changeListener),
+        _dmMessageEntityUpdateAdapter = UpdateAdapter(
+            database,
+            'DmMessageEntity',
+            ['id'],
+            (DmMessageEntity item) => <String, Object?>{
+                  'id': item.id,
+                  'text': item.text,
+                  'sender_id': item.senderId,
+                  'receiver_id': item.receiverId,
+                  'timestamp': item.timestamp,
+                  'is_own_message': item.isOwnMessage ? 1 : 0,
+                  'seen': item.seen ? 1 : 0
+                },
+            changeListener);
+
+  final sqflite.DatabaseExecutor database;
+
+  final StreamController<String> changeListener;
+
+  final QueryAdapter _queryAdapter;
+
+  final InsertionAdapter<DmMessageEntity> _dmMessageEntityInsertionAdapter;
+
+  final UpdateAdapter<DmMessageEntity> _dmMessageEntityUpdateAdapter;
+
+  @override
+  Stream<List<DmMessageEntity>> watchDmsFrom(int friendId) {
+    return _queryAdapter.queryListStream(
+        'SELECT * FROM DmMessageEntity WHERE sender_id = ?1 OR receiver_id = ?1 ORDER BY timestamp DESC',
+        mapper: (Map<String, Object?> row) => DmMessageEntity(
+            id: row['id'] as String,
+            text: row['text'] as String?,
+            senderId: row['sender_id'] as int,
+            receiverId: row['receiver_id'] as int,
+            timestamp: row['timestamp'] as int,
+            isOwnMessage: (row['is_own_message'] as int) != 0,
+            seen: (row['seen'] as int) != 0),
+        arguments: [friendId],
+        queryableName: 'DmMessageEntity',
+        isView: false);
+  }
+
+  @override
+  Future<void> insertDmMessage(DmMessageEntity message) async {
+    await _dmMessageEntityInsertionAdapter.insert(
+        message, OnConflictStrategy.abort);
+  }
+
+  @override
+  Future<void> updateDmMessage(DmMessageEntity message) async {
+    await _dmMessageEntityUpdateAdapter.update(
+        message, OnConflictStrategy.abort);
   }
 }

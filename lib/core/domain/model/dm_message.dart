@@ -7,7 +7,7 @@ class DmMessage extends Message {
   const DmMessage({
     required String id,
     required String? text,
-    required String senderId,
+    required int senderId,
     required String formattedDate,
     required bool isOwnMessage,
     required this.receiverId,

@@ -3,7 +3,6 @@ import 'dart:math';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:chat_wave/theme.dart';
 import 'package:flutter/material.dart';
-import 'package:faker/faker.dart';
 
 import '../../core/domain/model/channel.dart';
 
@@ -25,10 +24,10 @@ class ChatItem extends StatelessWidget {
         padding: const EdgeInsets.symmetric(vertical: 4.0, horizontal: 12.0),
         child: Row(
           children: [
-            CircleAvatar(
+            const CircleAvatar(
               radius: 36,
               backgroundImage: CachedNetworkImageProvider(
-                faker.image.image(),
+                'https://h-o-m-e.org/wp-content/uploads/2022/04/Blank-Profile-Picture-1.jpg',
               ),
             ),
             const SizedBox(width: 12.0),

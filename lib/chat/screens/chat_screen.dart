@@ -41,7 +41,10 @@ class _ChatScreenState extends State<ChatScreen> {
     return MultiBlocProvider(
       providers: [
         BlocProvider(create: (context) => OnlineBloc()),
-        BlocProvider(create: (context) => MessagesBloc()),
+        BlocProvider(
+          create: (context) =>
+              MessagesBloc(channelId: (widget.channel as DmChannel).friendId),
+        ),
         BlocProvider(
           create: (_) => MessageInputBloc(
             eventsBloc: BlocProvider.of<EventsBloc>(context),
