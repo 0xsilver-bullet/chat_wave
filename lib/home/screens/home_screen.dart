@@ -2,6 +2,7 @@ import 'package:chat_wave/chat/screens/chat_screen.dart';
 import 'package:chat_wave/core/event/events_bloc/events_bloc.dart';
 import 'package:chat_wave/home/blocs/add_friend_bloc/add_friend_bloc.dart';
 import 'package:chat_wave/home/blocs/channels_bloc/channels_bloc.dart';
+import 'package:chat_wave/utils/blocs/connectivity_bloc/connectivity_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_animated_dialog/flutter_animated_dialog.dart';
@@ -53,41 +54,56 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
   Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(
-        child: Column(
-          children: [
-            HomeTop(
-              onAddClick: () => _onAddFriendClick(context),
-              onShareClick: () {},
-              onSettingsClick: () {},
-            ),
-            const SizedBox(height: 18),
-            _searchField(context),
-            const SizedBox(height: 4.0),
-            Expanded(
-              child: BlocProvider(
-                create: (_) => ChannelsBloc(),
-                child: BlocBuilder<ChannelsBloc, ChannelsState>(
-                  builder: (ctx, state) {
-                    final channels = (state as ChannelsList).channels;
-                    return ListView.builder(
-                      itemCount: channels.length,
-                      itemBuilder: (_, index) {
-                        return ChatItem(
-                          channel: channels[index],
-                          onClick: () => Navigator.of(context).push(
-                            MaterialPageRoute(
-                              builder: (context) =>
-                                  ChatScreen(channel: channels[index]),
-                            ),
-                          ),
-                        );
-                      },
-                    );
-                  },
-                ),
+        child: BlocListener<ConnectivityBloc, ConnectivityState>(
+          listener: (ctx, state) {
+            if (state is! ConnectivityStatus) return;
+            if (!state.connected) {
+              const dissconnectedSnackback = SnackBar(
+                content: Text('No Internet Connection'),
+                backgroundColor: Colors.red,
+                duration: Duration(days: 30),
+              );
+              ScaffoldMessenger.of(ctx).showSnackBar(dissconnectedSnackback);
+            } else {
+              ScaffoldMessenger.of(ctx).hideCurrentSnackBar();
+            }
+          },
+          child: Column(
+            children: [
+              HomeTop(
+                onAddClick: () => _onAddFriendClick(context),
+                onShareClick: () {},
+                onSettingsClick: () {},
               ),
-            )
-          ],
+              const SizedBox(height: 18),
+              _searchField(context),
+              const SizedBox(height: 4.0),
+              Expanded(
+                child: BlocProvider(
+                  create: (_) => ChannelsBloc(),
+                  child: BlocBuilder<ChannelsBloc, ChannelsState>(
+                    builder: (ctx, state) {
+                      final channels = (state as ChannelsList).channels;
+                      return ListView.builder(
+                        itemCount: channels.length,
+                        itemBuilder: (_, index) {
+                          return ChatItem(
+                            channel: channels[index],
+                            onClick: () => Navigator.of(context).push(
+                              MaterialPageRoute(
+                                builder: (context) =>
+                                    ChatScreen(channel: channels[index]),
+                              ),
+                            ),
+                          );
+                        },
+                      );
+                    },
+                  ),
+                ),
+              )
+            ],
+          ),
         ),
       ),
     );

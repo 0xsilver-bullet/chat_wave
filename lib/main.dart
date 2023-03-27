@@ -1,12 +1,13 @@
 import 'package:chat_wave/core/event/events_bloc/events_bloc.dart';
 import 'package:chat_wave/home/screens/home_screen.dart';
-import 'package:chat_wave/utils/bloc/app_bloc.dart';
+import 'package:chat_wave/utils/blocs/connectivity_bloc/connectivity_bloc.dart';
 import 'package:chat_wave/utils/locator.dart';
 import 'package:flutter/material.dart';
 import 'package:chat_wave/theme.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'auth/screen/auth_screens.dart';
+import 'utils/blocs/app_bloc/app_bloc.dart';
 
 void main() async {
   WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
@@ -23,11 +24,16 @@ class ChatWaveApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiBlocProvider(
       providers: [
-        BlocProvider(create: (_) => AppBloc()),
+        BlocProvider(
+          create: (_) => AppBloc(),
+        ),
         BlocProvider(
           create: (_) => EventsBloc(),
           lazy: false,
-        )
+        ),
+        BlocProvider(
+          create: (_) => ConnectivityBloc(),
+        ),
       ],
       child: MaterialApp(
         theme: AppTheme.lightTheme,
