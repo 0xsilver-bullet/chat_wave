@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:chat_wave/core/data/network/b_wave_api.dart';
 import 'package:chat_wave/core/domain/token_manager.dart';
+import 'package:chat_wave/core/event/domain/model/client_event.dart';
 import 'package:web_socket_channel/io.dart';
 
 import '../domain/event_repository.dart';
@@ -57,5 +58,17 @@ class EventRepositoryImpl extends EventRepository {
   void _handleEvent(dynamic event) {
     // TODO: remove this print statement form here.
     print(event);
+  }
+
+  @override
+  bool emitClientEvent(ClientEvent event) {
+    if (_channel == null) return false;
+    final eventJson = event.toJson();
+    try {
+      _channel?.sink.add(eventJson);
+      return true;
+    } catch (e) {
+      return false;
+    }
   }
 }

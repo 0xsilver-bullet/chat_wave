@@ -1,3 +1,5 @@
+import 'model/client_event.dart';
+
 abstract class EventRepository {
   // this method is supposed to connect to the events websocket, and start to
   // handle coming events and process them.
@@ -7,4 +9,6 @@ abstract class EventRepository {
 
   // this method will cancel all the listeners and close the websocket connection.
   void clear();
+
+  bool emitClientEvent(ClientEvent event);
 }

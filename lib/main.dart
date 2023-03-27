@@ -21,12 +21,18 @@ class ChatWaveApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      theme: AppTheme.lightTheme,
-      darkTheme: AppTheme.darkTheme,
-      home: BlocProvider(
-        create: (_) => AppBloc(),
-        child: BlocConsumer<AppBloc, AppState>(
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider(create: (_) => AppBloc()),
+        BlocProvider(
+          create: (_) => EventsBloc(),
+          lazy: false,
+        )
+      ],
+      child: MaterialApp(
+        theme: AppTheme.lightTheme,
+        darkTheme: AppTheme.darkTheme,
+        home: BlocConsumer<AppBloc, AppState>(
           listener: (context, state) {
             if (state is! LoadingAppState) {
               FlutterNativeSplash.remove();
@@ -36,11 +42,7 @@ class ChatWaveApp extends StatelessWidget {
             if (state is AppNeedsAuthentication) {
               return const LoginScreen();
             } else if (state is AppAuthenticated) {
-              return BlocProvider(
-                create: (context) => EventsBloc(),
-                lazy: false,
-                child: const HomeScreen(),
-              );
+              return const HomeScreen();
             } else {
               return Container();
             }

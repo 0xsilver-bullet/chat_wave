@@ -16,16 +16,20 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
-  final _searchFieldController = TextEditingController();
+  late final TextEditingController _searchFieldController;
 
   @override
   void initState() {
+    _searchFieldController = TextEditingController();
     WidgetsBinding.instance.addObserver(this);
+    // initialize events bloc
+    BlocProvider.of<EventsBloc>(context).add(Initialize());
     super.initState();
   }
 
   @override
   void dispose() {
+    _searchFieldController.dispose();
     WidgetsBinding.instance.removeObserver(this);
     super.dispose();
   }

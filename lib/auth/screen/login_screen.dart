@@ -89,11 +89,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       onLockOpenCallback: () {
                         Navigator.of(context).pushReplacement(
                           MaterialPageRoute(
-                            builder: (context) => BlocProvider(
-                              create: (_) => EventsBloc(),
-                              lazy: false,
-                              child: const HomeScreen(),
-                            ),
+                            builder: (context) => const HomeScreen(),
                           ),
                         );
                       },

@@ -1,5 +1,7 @@
+import 'package:chat_wave/chat/blocs/message_input_bloc/message_input_bloc.dart';
 import 'package:chat_wave/core/domain/model/channel.dart';
 import 'package:chat_wave/core/domain/model/dm_channel.dart';
+import 'package:chat_wave/core/event/events_bloc/events_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -7,11 +9,29 @@ import '../blocs/messages_bloc/messages_bloc.dart';
 import '../blocs/online_bloc/online_bloc.dart';
 import '../widgets/widgets.dart';
 
-class ChatScreen extends StatelessWidget {
-  ChatScreen({super.key, required this.channel});
+class ChatScreen extends StatefulWidget {
+  const ChatScreen({super.key, required this.channel});
 
   final Channel channel;
-  final _messageFieldController = TextEditingController();
+
+  @override
+  State<ChatScreen> createState() => _ChatScreenState();
+}
+
+class _ChatScreenState extends State<ChatScreen> {
+  late final TextEditingController _messageFieldController;
+
+  @override
+  void initState() {
+    _messageFieldController = TextEditingController();
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    _messageFieldController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -20,12 +40,14 @@ class ChatScreen extends StatelessWidget {
 
     return MultiBlocProvider(
       providers: [
+        BlocProvider(create: (context) => OnlineBloc()),
+        BlocProvider(create: (context) => MessagesBloc()),
         BlocProvider(
-          create: (context) => OnlineBloc(),
-        ),
-        BlocProvider(
-          create: (context) => MessagesBloc(),
-        ),
+          create: (_) => MessageInputBloc(
+            eventsBloc: BlocProvider.of<EventsBloc>(context),
+            sendChannelId: (widget.channel as DmChannel).friendId,
+          ),
+        )
       ],
       child: Scaffold(
         body: SafeArea(
@@ -35,11 +57,11 @@ class ChatScreen extends StatelessWidget {
                 builder: (context, state) {
                   bool? online;
                   // only check online or not in case of dm channel
-                  if (channel is DmChannel) {
+                  if (widget.channel is DmChannel) {
                     online = state is Online;
                   }
                   return ChatTop(
-                    channel: channel,
+                    channel: widget.channel,
                     online: online,
                     onCloseCallback: () => Navigator.of(context).pop(),
                   );
@@ -73,18 +95,32 @@ class ChatScreen extends StatelessWidget {
               ),
               Theme(
                 data: ThemeData(
-                  inputDecorationTheme: const InputDecorationTheme(
-                    border: InputBorder.none,
-                    contentPadding: EdgeInsets.symmetric(horizontal: 8),
-                  ),
+                  inputDecorationTheme: InputDecorationTheme(
+                      border: InputBorder.none,
+                      contentPadding: const EdgeInsets.symmetric(horizontal: 8),
+                      hintStyle: TextStyle(
+                        color: isDarkMode ? Colors.white : Colors.black,
+                      )),
                 ),
-                child: TextField(
-                  controller: _messageFieldController,
-                  textInputAction: TextInputAction.send,
-                  decoration: const InputDecoration(
-                    hintText: 'Message...',
-                    border: InputBorder.none,
-                  ),
+                child: BlocBuilder<MessageInputBloc, MessageInputState>(
+                  buildWhen: (_, __) => false,
+                  builder: (ctx, state) {
+                    return TextField(
+                      controller: _messageFieldController,
+                      textInputAction: TextInputAction.send,
+                      onSubmitted: (value) {
+                        BlocProvider.of<MessageInputBloc>(ctx).add(Send(value));
+                        _messageFieldController.text = '';
+                      },
+                      decoration: const InputDecoration(
+                        hintText: 'Message...',
+                        border: InputBorder.none,
+                      ),
+                      style: TextStyle(
+                        color: isDarkMode ? Colors.white : Colors.black,
+                      ),
+                    );
+                  },
                 ),
               )
             ],

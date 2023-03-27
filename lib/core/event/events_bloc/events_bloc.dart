@@ -1,7 +1,9 @@
 import 'package:bloc/bloc.dart';
 import 'package:chat_wave/core/event/domain/event_repository.dart';
+import 'package:chat_wave/core/event/domain/model/client_event.dart';
 import 'package:chat_wave/utils/locator.dart';
 import 'package:equatable/equatable.dart';
+import 'package:flutter/material.dart';
 
 part 'events_event.dart';
 part 'events_state.dart';
@@ -11,7 +13,7 @@ class EventsBloc extends Bloc<EventsEvent, EventsState> {
     on<Initialize>(_handleInitializeEvent);
     on<Pause>(_handlePauseEvent);
     on<Resume>(_handleResumeEvent);
-    add(Initialize());
+    on<SendDm>(_handleSendDm);
   }
 
   final repository = locator<EventRepository>();
@@ -40,6 +42,18 @@ class EventsBloc extends Bloc<EventsEvent, EventsState> {
     emit(Initializing());
     repository.initialize();
     emit(Initialized());
+  }
+
+  Future<void> _handleSendDm(
+    SendDm event,
+    Emitter<EventsState> emit,
+  ) async {
+    final sendDmEvent = SendDmMessageEvent(
+      text: event.text,
+      receiverId: event.receiverId,
+      provisionalId: null,
+    );
+    repository.emitClientEvent(sendDmEvent);
   }
 
   @override
