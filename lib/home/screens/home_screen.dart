@@ -2,6 +2,7 @@ import 'package:chat_wave/chat/screens/chat_screen.dart';
 import 'package:chat_wave/core/event/events_bloc/events_bloc.dart';
 import 'package:chat_wave/home/blocs/add_friend_bloc/add_friend_bloc.dart';
 import 'package:chat_wave/home/blocs/channels_bloc/channels_bloc.dart';
+import 'package:chat_wave/setting/screen/settings_screen.dart';
 import 'package:chat_wave/utils/blocs/connectivity_bloc/connectivity_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -73,7 +74,9 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
               HomeTop(
                 onAddClick: () => _onAddFriendClick(context),
                 onShareClick: () {},
-                onSettingsClick: () {},
+                onSettingsClick: () {
+                  Navigator.of(context).push(SettingsScreen.route);
+                },
               ),
               const SizedBox(height: 18),
               _searchField(context),

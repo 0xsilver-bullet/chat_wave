@@ -35,25 +35,28 @@ class ChatWaveApp extends StatelessWidget {
           create: (_) => ConnectivityBloc(),
         ),
       ],
-      child: MaterialApp(
-        theme: AppTheme.lightTheme,
-        darkTheme: AppTheme.darkTheme,
-        home: BlocConsumer<AppBloc, AppState>(
-          listener: (context, state) {
-            if (state is! LoadingAppState) {
-              FlutterNativeSplash.remove();
-            }
-          },
-          builder: (context, state) {
-            if (state is AppNeedsAuthentication) {
-              return const LoginScreen();
-            } else if (state is AppAuthenticated) {
-              return const HomeScreen();
-            } else {
-              return Container();
-            }
-          },
-        ),
+      child: BlocConsumer<AppBloc, AppState>(
+        listener: (context, state) {
+          if (state is! LoadingAppState) {
+            FlutterNativeSplash.remove();
+          }
+        },
+        builder: (context, state) {
+          Widget home;
+          if (state is AppNeedsAuthentication) {
+            home = const LoginScreen();
+          } else if (state is AppAuthenticated) {
+            home = const HomeScreen();
+          } else {
+            home = Container();
+          }
+          return MaterialApp(
+            theme:
+                state.forceDarkMode ? AppTheme.darkTheme : AppTheme.lightTheme,
+            darkTheme: AppTheme.darkTheme,
+            home: home,
+          );
+        },
       ),
     );
   }

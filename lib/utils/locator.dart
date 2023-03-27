@@ -1,9 +1,13 @@
+import 'package:chat_wave/auth/data/repository/auth_repository_impl.dart';
+import 'package:chat_wave/auth/domain/repository/auth_repository.dart';
 import 'package:chat_wave/chat/repository/dm_repository.dart';
 import 'package:chat_wave/chat/repository/dm_repository_impl.dart';
+import 'package:chat_wave/core/data/app_preferences_impl.dart';
 import 'package:chat_wave/core/data/db/chat_wave_db.dart';
 import 'package:chat_wave/core/data/network/auth_interceptor.dart';
 import 'package:chat_wave/core/data/secure_local_storage_impl.dart';
 import 'package:chat_wave/core/data/token_manager_impl.dart';
+import 'package:chat_wave/core/domain/app_preferences.dart';
 import 'package:chat_wave/core/domain/secure_local_storage.dart';
 import 'package:chat_wave/core/domain/token_manager.dart';
 import 'package:chat_wave/core/event/data/event_repository_impl.dart';
@@ -53,6 +57,8 @@ void setupServiceLocator() {
     },
   );
 
+  locator.registerFactory<AuthRepository>(() => AuthRepositoryImpl());
+
   locator.registerFactory<DmRepository>(
     () {
       final db = locator<ChatWaveDb>();
@@ -60,6 +66,8 @@ void setupServiceLocator() {
       return DmRepositoryImpl(db.dmMessageDao, storage);
     },
   );
+
+  locator.registerLazySingleton<AppPreferences>(() => AppPreferencesImpl());
 }
 
 Dio _configureDioClient() {

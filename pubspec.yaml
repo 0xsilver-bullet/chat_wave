@@ -30,6 +30,7 @@ dependencies:
   web_socket_channel: ^2.3.0
   uuid: ^3.0.6
   timeago: ^3.4.0
+  shared_preferences: ^2.0.20
 
 dev_dependencies:
   flutter_test:

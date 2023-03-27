@@ -40,6 +40,11 @@ abstract class AppTheme {
         borderSide: BorderSide(color: Colors.grey, width: 2),
       ),
     ),
+    appBarTheme: const AppBarTheme(
+      backgroundColor: Colors.white,
+      elevation: 0,
+      iconTheme: IconThemeData(color: Colors.black),
+    ),
     textTheme: const TextTheme(
       bodySmall: TextStyle(
         color: Colors.black,
@@ -105,6 +110,11 @@ abstract class AppTheme {
         ),
         borderSide: BorderSide(color: Colors.grey, width: 2),
       ),
+    ),
+    appBarTheme: const AppBarTheme(
+      backgroundColor: Colors.black,
+      elevation: 0,
+      iconTheme: IconThemeData(color: Colors.white),
     ),
     textTheme: const TextTheme(
       bodySmall: TextStyle(

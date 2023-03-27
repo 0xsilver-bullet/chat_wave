@@ -1,14 +1,29 @@
 part of 'app_bloc.dart';
 
 abstract class AppState extends Equatable {
-  const AppState();
+  const AppState({
+    required this.forceDarkMode,
+  });
+
+  final bool forceDarkMode;
 
   @override
-  List<Object> get props => [];
+  List<Object> get props => [forceDarkMode];
 }
 
-class LoadingAppState extends AppState {}
+@immutable
+class LoadingAppState extends AppState {
+  const LoadingAppState() : super(forceDarkMode: false);
+}
 
-class AppAuthenticated extends AppState {}
+@immutable
+class AppAuthenticated extends AppState {
+  const AppAuthenticated(bool forceDarkMode)
+      : super(forceDarkMode: forceDarkMode);
+}
 
-class AppNeedsAuthentication extends AppState {}
+@immutable
+class AppNeedsAuthentication extends AppState {
+  const AppNeedsAuthentication(bool forceDarkMode)
+      : super(forceDarkMode: forceDarkMode);
+}

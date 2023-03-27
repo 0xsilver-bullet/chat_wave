@@ -8,3 +8,7 @@ abstract class AppEvent extends Equatable {
 }
 
 class InitializeAppState extends AppEvent {}
+
+class ToggleForceDarkMode extends AppEvent {}
+
+class Logout extends AppEvent {}

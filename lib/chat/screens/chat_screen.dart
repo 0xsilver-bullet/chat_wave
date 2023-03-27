@@ -2,6 +2,7 @@ import 'package:chat_wave/chat/blocs/message_input_bloc/message_input_bloc.dart'
 import 'package:chat_wave/core/domain/model/channel.dart';
 import 'package:chat_wave/core/domain/model/dm_channel.dart';
 import 'package:chat_wave/core/event/events_bloc/events_bloc.dart';
+import 'package:chat_wave/utils/blocs/app_bloc/app_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -35,6 +36,7 @@ class _ChatScreenState extends State<ChatScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final forceDarkMode = BlocProvider.of<AppBloc>(context).state.forceDarkMode;
     final isDarkMode =
         MediaQuery.of(context).platformBrightness == Brightness.dark;
 
@@ -75,8 +77,9 @@ class _ChatScreenState extends State<ChatScreen> {
                   final messages = (state as MessagesList).messages;
                   return Expanded(
                     child: Container(
-                      color:
-                          isDarkMode ? Colors.black : const Color(0xFFF4F4F4),
+                      color: isDarkMode || forceDarkMode
+                          ? Colors.black
+                          : const Color(0xFFF4F4F4),
                       child: ListView.builder(
                         padding: const EdgeInsets.symmetric(horizontal: 8),
                         itemCount: messages.length,
@@ -102,7 +105,9 @@ class _ChatScreenState extends State<ChatScreen> {
                       border: InputBorder.none,
                       contentPadding: const EdgeInsets.symmetric(horizontal: 8),
                       hintStyle: TextStyle(
-                        color: isDarkMode ? Colors.white : Colors.black,
+                        color: isDarkMode || forceDarkMode
+                            ? Colors.white
+                            : Colors.black,
                       )),
                 ),
                 child: BlocBuilder<MessageInputBloc, MessageInputState>(
@@ -120,7 +125,9 @@ class _ChatScreenState extends State<ChatScreen> {
                         border: InputBorder.none,
                       ),
                       style: TextStyle(
-                        color: isDarkMode ? Colors.white : Colors.black,
+                        color: isDarkMode || forceDarkMode
+                            ? Colors.white
+                            : Colors.black,
                       ),
                     );
                   },
