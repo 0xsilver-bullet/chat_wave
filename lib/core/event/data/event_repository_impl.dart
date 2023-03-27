@@ -2,6 +2,9 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:chat_wave/core/data/db/dao/dm_message_dao.dart';
+import 'package:chat_wave/core/data/db/dao/friend_dao.dart';
+import 'package:chat_wave/core/data/db/entity/dm_message.dart';
+import 'package:chat_wave/core/data/db/entity/friend.dart';
 import 'package:chat_wave/core/data/network/b_wave_api.dart';
 import 'package:chat_wave/core/domain/token_manager.dart';
 import 'package:chat_wave/core/event/domain/model/client_event.dart';
@@ -11,10 +14,11 @@ import 'package:web_socket_channel/io.dart';
 import '../domain/event_repository.dart';
 
 class EventRepositoryImpl extends EventRepository {
-  EventRepositoryImpl(this._tokenManager, this._dmDao);
+  EventRepositoryImpl(this._tokenManager, this._dmDao, this._friendDao);
 
   final TokenManager _tokenManager;
   final DmMessageDao _dmDao;
+  final FriendDao _friendDao;
 
   IOWebSocketChannel? _channel;
   StreamSubscription? _subscription;
@@ -71,10 +75,36 @@ class EventRepositoryImpl extends EventRepository {
     }
   }
 
-  void _handleEvent(dynamic event) {
+  Future<void> _handleEvent(dynamic event) async {
     final eventJson = jsonDecode(event);
     final serverEvent = ServerEvent.parse(eventJson);
-    // TODO: you need to handle the event and remove the print statement.
+    if (serverEvent is ReceivedDmMessageEvent) {
+      await _handleReceivedMessageEvent(serverEvent);
+    } else if (serverEvent is ConnectedToUserEvent) {
+      await _handleConnectedToUserEvent(serverEvent);
+    }
     print(eventJson);
+  }
+
+  Future<void> _handleReceivedMessageEvent(ReceivedDmMessageEvent event) async {
+    final message = DmMessageEntity(
+      id: event.messageDto.id,
+      text: event.messageDto.text,
+      senderId: event.messageDto.senderId,
+      receiverId: event.messageDto.receiverId,
+      timestamp: event.messageDto.timestamp,
+      isOwnMessage: false,
+      seen: false,
+    );
+    await _dmDao.insertDmMessage(message);
+  }
+
+  Future<void> _handleConnectedToUserEvent(ConnectedToUserEvent event) async {
+    final friend = Friend(
+      name: event.user.name,
+      username: event.user.username,
+      id: event.user.id,
+    );
+    await _friendDao.insertFriend(friend);
   }
 }

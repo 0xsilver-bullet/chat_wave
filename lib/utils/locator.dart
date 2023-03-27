@@ -49,7 +49,7 @@ void setupServiceLocator() {
     () {
       final tokenManager = locator<TokenManager>();
       final db = locator<ChatWaveDb>();
-      return EventRepositoryImpl(tokenManager, db.dmMessageDao);
+      return EventRepositoryImpl(tokenManager, db.dmMessageDao, db.friendDao);
     },
   );
 
