@@ -82,6 +82,8 @@ class EventRepositoryImpl extends EventRepository {
       await _handleReceivedMessageEvent(serverEvent);
     } else if (serverEvent is ConnectedToUserEvent) {
       await _handleConnectedToUserEvent(serverEvent);
+    } else if (serverEvent is DmSentEvent) {
+      await _handleDmSent(serverEvent);
     }
     print(eventJson);
   }
@@ -106,5 +108,22 @@ class EventRepositoryImpl extends EventRepository {
       id: event.user.id,
     );
     await _friendDao.insertFriend(friend);
+  }
+
+  Future<void> _handleDmSent(DmSentEvent event) async {
+    final message = DmMessageEntity(
+      id: event.messageDto.id,
+      text: event.messageDto.text,
+      senderId: event.messageDto.senderId,
+      receiverId: event.messageDto.receiverId,
+      timestamp: event.messageDto.timestamp,
+      isOwnMessage: true,
+      seen: false,
+    );
+    if (event.provisionalId != null) {
+      await _dmDao.completeReplace(event.provisionalId!, message);
+    } else {
+      await _dmDao.insertDmMessage(message);
+    }
   }
 }

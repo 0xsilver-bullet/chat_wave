@@ -199,6 +199,13 @@ class _$DmMessageDao extends DmMessageDao {
   final UpdateAdapter<DmMessageEntity> _dmMessageEntityUpdateAdapter;
 
   @override
+  Future<void> deleteById(String id) async {
+    await _queryAdapter.queryNoReturn(
+        'DELETE FROM DmMessageEntity WHERE id = ?1',
+        arguments: [id]);
+  }
+
+  @override
   Stream<List<DmMessageEntity>> watchDmsFrom(int friendId) {
     return _queryAdapter.queryListStream(
         'SELECT * FROM DmMessageEntity WHERE sender_id = ?1 OR receiver_id = ?1 ORDER BY timestamp DESC',
@@ -225,5 +232,23 @@ class _$DmMessageDao extends DmMessageDao {
   Future<void> updateDmMessage(DmMessageEntity message) async {
     await _dmMessageEntityUpdateAdapter.update(
         message, OnConflictStrategy.abort);
+  }
+
+  @override
+  Future<void> completeReplace(
+    String provisionalId,
+    DmMessageEntity message,
+  ) async {
+    if (database is sqflite.Transaction) {
+      await super.completeReplace(provisionalId, message);
+    } else {
+      await (database as sqflite.Database)
+          .transaction<void>((transaction) async {
+        final transactionDatabase = _$ChatWaveDb(changeListener)
+          ..database = transaction;
+        await transactionDatabase.dmMessageDao
+            .completeReplace(provisionalId, message);
+      });
+    }
   }
 }
