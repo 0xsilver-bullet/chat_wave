@@ -1,6 +1,7 @@
 import 'package:chat_wave/auth/blocs/login_bloc/login_bloc.dart';
 import 'package:chat_wave/core/event/events_bloc/events_bloc.dart';
 import 'package:chat_wave/home/screens/home_screen.dart';
+import 'package:chat_wave/utils/blocs/app_bloc/app_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../widgets/widgets.dart';
@@ -92,6 +93,7 @@ class _LoginScreenState extends State<LoginScreen> {
                             builder: (context) => const HomeScreen(),
                           ),
                         );
+                        BlocProvider.of<AppBloc>(context).add(UserLoggedIn());
                       },
                     ),
                     const Expanded(child: SizedBox()),

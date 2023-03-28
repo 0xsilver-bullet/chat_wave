@@ -16,8 +16,4 @@ abstract class SecureStorage {
   Future<String?> getRefreshToken();
 
   Future<void> deleteTokens();
-
-  Future<void> saveUserId(int userId);
-
-  Future<int?> getUserId();
 }

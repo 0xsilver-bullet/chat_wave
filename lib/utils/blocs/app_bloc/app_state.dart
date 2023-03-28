@@ -18,7 +18,9 @@ class LoadingAppState extends AppState {
 
 @immutable
 class AppAuthenticated extends AppState {
-  const AppAuthenticated(bool forceDarkMode)
+  final UserInfo userInfo;
+
+  const AppAuthenticated(bool forceDarkMode, this.userInfo)
       : super(forceDarkMode: forceDarkMode);
 }
 

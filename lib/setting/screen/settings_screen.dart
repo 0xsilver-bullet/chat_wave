@@ -17,84 +17,88 @@ class SettingsScreen extends StatelessWidget {
       appBar: AppBar(),
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 24.0),
-        child: Column(
-          children: [
-            const CircleAvatar(
-              radius: 36,
-              backgroundImage: CachedNetworkImageProvider(
-                'https://h-o-m-e.org/wp-content/uploads/2022/04/Blank-Profile-Picture-1.jpg',
-              ),
-            ),
-            const SizedBox(height: 8),
-            Text(
-              'Name',
-              style: Theme.of(context)
-                  .textTheme
-                  .displayLarge
-                  ?.copyWith(fontSize: 32),
-            ),
-            const SizedBox(height: 32),
-            const Align(
-              alignment: Alignment.centerLeft,
-              child: Text(
-                'GENERAL',
-                style: TextStyle(
-                  color: Colors.grey,
-                  fontSize: 14,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            ),
-            SettingTile(
-              icon: Icons.person,
-              name: 'Edit Profile',
-              trailing: const Icon(Icons.arrow_forward_ios, size: 20),
-              onClick: () {},
-            ),
-            SettingTile(
-              icon: Icons.notifications,
-              name: 'Notifications',
-              trailing: const Icon(Icons.arrow_forward_ios, size: 20),
-              onClick: () {},
-            ),
-            SettingTile(
-              icon: Icons.fingerprint,
-              name: 'Security',
-              trailing: const Icon(Icons.arrow_forward_ios, size: 20),
-              onClick: () {},
-            ),
-            BlocBuilder<AppBloc, AppState>(
-              builder: (ctx, state) {
-                return SettingTile(
-                  icon: Icons.dark_mode,
-                  name: 'Dark Mode',
-                  trailing: Switch(
-                    value: state.forceDarkMode,
-                    onChanged: (_) {
-                      BlocProvider.of<AppBloc>(ctx).add(ToggleForceDarkMode());
-                    },
+        child: BlocBuilder<AppBloc, AppState>(
+          builder: (context, state) {
+            final currentstate = state as AppAuthenticated;
+            return Column(
+              children: [
+                const CircleAvatar(
+                  radius: 36,
+                  backgroundImage: CachedNetworkImageProvider(
+                    'https://h-o-m-e.org/wp-content/uploads/2022/04/Blank-Profile-Picture-1.jpg',
                   ),
-                );
-              },
-            ),
-            const SizedBox(height: 24),
-            SettingTile(
-              icon: Icons.logout,
-              name: 'Logout',
-              onClick: () {
-                BlocProvider.of<AppBloc>(context).add(Logout());
-                Navigator.of(context).pushAndRemoveUntil(
-                  LoginScreen.route,
-                  (route) => false,
-                );
-              },
-              iconColor: Colors.red,
-              textTheme: Theme.of(context)
-                  .textTheme
-                  .bodySmall
-                  ?.copyWith(fontWeight: FontWeight.bold, color: Colors.red),
-            ),
-          ],
+                ),
+                const SizedBox(height: 8),
+                Text(
+                  currentstate.userInfo.name,
+                  style: Theme.of(context)
+                      .textTheme
+                      .displayLarge
+                      ?.copyWith(fontSize: 32),
+                ),
+                const SizedBox(height: 32),
+                const Align(
+                  alignment: Alignment.centerLeft,
+                  child: Text(
+                    'GENERAL',
+                    style: TextStyle(
+                      color: Colors.grey,
+                      fontSize: 14,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+                SettingTile(
+                  icon: Icons.person,
+                  name: 'Edit Profile',
+                  trailing: const Icon(Icons.arrow_forward_ios, size: 20),
+                  onClick: () {},
+                ),
+                SettingTile(
+                  icon: Icons.notifications,
+                  name: 'Notifications',
+                  trailing: const Icon(Icons.arrow_forward_ios, size: 20),
+                  onClick: () {},
+                ),
+                SettingTile(
+                  icon: Icons.fingerprint,
+                  name: 'Security',
+                  trailing: const Icon(Icons.arrow_forward_ios, size: 20),
+                  onClick: () {},
+                ),
+                BlocBuilder<AppBloc, AppState>(
+                  builder: (ctx, state) {
+                    return SettingTile(
+                      icon: Icons.dark_mode,
+                      name: 'Dark Mode',
+                      trailing: Switch(
+                        value: state.forceDarkMode,
+                        onChanged: (_) {
+                          BlocProvider.of<AppBloc>(ctx)
+                              .add(ToggleForceDarkMode());
+                        },
+                      ),
+                    );
+                  },
+                ),
+                const SizedBox(height: 24),
+                SettingTile(
+                  icon: Icons.logout,
+                  name: 'Logout',
+                  onClick: () {
+                    BlocProvider.of<AppBloc>(context).add(Logout());
+                    Navigator.of(context).pushAndRemoveUntil(
+                      LoginScreen.route,
+                      (route) => false,
+                    );
+                  },
+                  iconColor: Colors.red,
+                  textTheme: Theme.of(context).textTheme.bodySmall?.copyWith(
+                      fontWeight: FontWeight.bold, color: Colors.red),
+                ),
+              ],
+            );
+          },
         ),
       ),
     );

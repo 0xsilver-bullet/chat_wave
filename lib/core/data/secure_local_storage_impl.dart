@@ -46,19 +46,4 @@ class SecureStorageImpl implements SecureStorage {
     await _storage.delete(key: SecureStorage.tokenKey);
     return await _storage.delete(key: SecureStorage.refreshTokenKey);
   }
-
-  @override
-  Future<void> saveUserId(int userId) async {
-    return await _storage.write(
-      key: SecureStorage.userIdKey,
-      value: userId.toString(),
-    );
-  }
-
-  @override
-  Future<int?> getUserId() async {
-    String? idStr = await _storage.read(key: SecureStorage.userIdKey);
-    if (idStr == null) return null;
-    return int.parse(idStr);
-  }
 }

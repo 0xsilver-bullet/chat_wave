@@ -62,8 +62,8 @@ void setupServiceLocator() {
   locator.registerFactory<DmRepository>(
     () {
       final db = locator<ChatWaveDb>();
-      final storage = locator<SecureStorage>();
-      return DmRepositoryImpl(db.dmMessageDao, storage);
+      final prefs = locator<AppPreferences>();
+      return DmRepositoryImpl(db.dmMessageDao, prefs);
     },
   );
 

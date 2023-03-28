@@ -1,20 +1,20 @@
 import 'package:chat_wave/core/data/db/dao/dm_message_dao.dart';
 import 'package:chat_wave/core/data/db/entity/dm_message.dart';
+import 'package:chat_wave/core/domain/app_preferences.dart';
 import 'package:chat_wave/core/domain/model/dm_message.dart';
-import 'package:chat_wave/core/domain/secure_local_storage.dart';
 import 'package:timeago/timeago.dart' as timeago;
 
 import 'dm_repository.dart';
 
 class DmRepositoryImpl extends DmRepository {
-  DmRepositoryImpl(this._dmDao, this._storage) {
-    _userIdFuture = _storage.getUserId();
+  DmRepositoryImpl(this._dmDao, this._pref) {
+    _userIdFuture = _pref.getUserId();
   }
 
   late final Future<int?> _userIdFuture;
 
   final DmMessageDao _dmDao;
-  final SecureStorage _storage;
+  final AppPreferences _pref;
   Future<int> get _userId async => (await _userIdFuture)!;
 
   @override
