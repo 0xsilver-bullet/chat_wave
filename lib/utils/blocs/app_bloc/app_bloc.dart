@@ -17,6 +17,7 @@ class AppBloc extends Bloc<AppEvent, AppState> {
     on<ToggleForceDarkMode>(_handleToggleForceDarkMode);
     on<UserLoggedIn>(_handleUserLoggedIn);
     on<Logout>(_handleLogoutEvent);
+    on<UserInfoChanged>(_handleUserInfoChangedEvent);
     add(InitializeAppState());
   }
 
@@ -67,5 +68,12 @@ class AppBloc extends Bloc<AppEvent, AppState> {
     final forceDarkMode = state.forceDarkMode;
     final userInfo = await _prefs.getUserInfo();
     emit(AppAuthenticated(forceDarkMode, userInfo!));
+  }
+
+  Future<void> _handleUserInfoChangedEvent(
+    UserInfoChanged event,
+    Emitter<AppState> emit,
+  ) async {
+    emit(AppAuthenticated(state.forceDarkMode, event.userInfo));
   }
 }
