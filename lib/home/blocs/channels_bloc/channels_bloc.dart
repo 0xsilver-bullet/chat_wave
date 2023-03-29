@@ -22,6 +22,7 @@ class ChannelsBloc extends Bloc<ChannelsEvent, ChannelsState> {
             (friend) => DmChannel(
               friendId: friend.id,
               friendName: friend.name,
+              profilePicUrl: friend.profilePicUrl,
               lastMessage: null,
               online: true,
             ),

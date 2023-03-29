@@ -10,7 +10,12 @@ class DmChannel extends Channel {
     required this.friendId,
     required this.online,
     required Message? lastMessage,
-  }) : super(channelName: friendName, lastMessage: lastMessage);
+    required String? profilePicUrl,
+  }) : super(
+          channelName: friendName,
+          lastMessage: lastMessage,
+          channelImageUrl: profilePicUrl,
+        );
 
   final int friendId;
   final String friendName;
