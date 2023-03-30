@@ -39,7 +39,12 @@ class _LoginScreenState extends State<LoginScreen> {
               builder: (context, state) {
                 return Column(
                   children: [
-                    SizedBox(height: screenHeight * 0.4),
+                    SizedBox(height: screenHeight * 0.34),
+                    Text(
+                      'LOGIN',
+                      style: Theme.of(context).textTheme.titleSmall,
+                    ),
+                    const SizedBox(height: 24),
                     AuthField(
                       title: 'Username',
                       onValueChange: (newValue) =>

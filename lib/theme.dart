@@ -66,6 +66,12 @@ abstract class AppTheme {
         color: Colors.black,
         fontSize: 16,
       ),
+      titleSmall: TextStyle(
+        fontSize: 26,
+        fontFamily: 'Poppins',
+        fontWeight: FontWeight.bold,
+        color: Colors.black,
+      ),
       displayMedium: TextStyle(
         fontFamily: 'Montserrat',
         fontSize: 18,
@@ -147,6 +153,12 @@ abstract class AppTheme {
       titleLarge: TextStyle(
         color: Colors.white,
         fontSize: 16,
+      ),
+      titleSmall: TextStyle(
+        fontSize: 26,
+        fontFamily: 'Poppins',
+        fontWeight: FontWeight.bold,
+        color: Colors.white,
       ),
       displayMedium: TextStyle(
         fontFamily: 'Montserrat',

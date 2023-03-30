@@ -28,72 +28,95 @@ class _SignupScreenState extends State<SignupScreen> {
       child: Scaffold(
         body: SingleChildScrollView(
           padding: const EdgeInsets.symmetric(horizontal: 16.0),
-          child: BlocConsumer<SignupBloc, SignupState>(
-            listener: (context, state) {
-              if (state is SignedUp) {
-                Navigator.of(context).pop();
-              }
-            },
-            builder: (context, state) {
-              return Column(
-                children: <Widget>[
-                  SizedBox(height: screenHeight * 0.4),
-                  AuthField(
-                    title: 'Name',
-                    textInputAction: TextInputAction.next,
-                    onValueChange: (newValue) =>
-                        BlocProvider.of<SignupBloc>(context).add(
-                      NameFieldChanged(newValue),
+          child: SizedBox(
+            width: double.infinity,
+            height: screenHeight,
+            child: BlocConsumer<SignupBloc, SignupState>(
+              listener: (context, state) {
+                if (state is SignedUp) {
+                  Navigator.of(context).pop();
+                }
+              },
+              builder: (context, state) {
+                return Column(
+                  children: <Widget>[
+                    SizedBox(height: screenHeight * 0.3),
+                    Text(
+                      'SIGN UP',
+                      style: Theme.of(context).textTheme.titleSmall,
                     ),
-                    errorText: (state is NotSignedUp)
-                        ? state.signupFieldsState.nameError
-                        : null,
-                    enabled: state is NotSignedUp,
-                  ),
-                  const SizedBox(height: 16.0),
-                  AuthField(
-                    title: 'Username',
-                    onValueChange: (newValue) =>
-                        BlocProvider.of<SignupBloc>(context).add(
-                      UsernameFieldChanged(newValue),
-                    ),
-                    errorText: (state is NotSignedUp)
-                        ? state.signupFieldsState.usernameError
-                        : null,
-                    textInputAction: TextInputAction.next,
-                    enabled: state is NotSignedUp,
-                  ),
-                  const SizedBox(height: 16.0),
-                  AuthField(
-                    title: 'Password',
-                    obsecureText: _hidePassword,
-                    onValueChange: (newValue) =>
-                        BlocProvider.of<SignupBloc>(context).add(
-                      PasswordFieldChanged(newValue),
-                    ),
-                    onSubmitted: (_) =>
-                        BlocProvider.of<SignupBloc>(context).add(Submit()),
-                    trailingIcon: IconButton(
-                      onPressed: _toggleShowPassword,
-                      icon: Icon(
-                        _hidePassword ? Icons.visibility_off : Icons.visibility,
+                    const SizedBox(height: 24),
+                    AuthField(
+                      title: 'Name',
+                      textInputAction: TextInputAction.next,
+                      onValueChange: (newValue) =>
+                          BlocProvider.of<SignupBloc>(context).add(
+                        NameFieldChanged(newValue),
                       ),
-                      splashRadius: 16,
+                      errorText: (state is NotSignedUp)
+                          ? state.signupFieldsState.nameError
+                          : null,
+                      enabled: state is NotSignedUp,
                     ),
-                    errorText: (state is NotSignedUp)
-                        ? state.signupFieldsState.passwordError
-                        : null,
-                    enabled: state is NotSignedUp,
-                  ),
-                  const SizedBox(height: 40),
-                  IconButton(
-                    onPressed: () =>
-                        BlocProvider.of<SignupBloc>(context).add(Submit()),
-                    icon: const Icon(Icons.arrow_forward_ios),
-                  ),
-                ],
-              );
-            },
+                    const SizedBox(height: 16.0),
+                    AuthField(
+                      title: 'Username',
+                      onValueChange: (newValue) =>
+                          BlocProvider.of<SignupBloc>(context).add(
+                        UsernameFieldChanged(newValue),
+                      ),
+                      errorText: (state is NotSignedUp)
+                          ? state.signupFieldsState.usernameError
+                          : null,
+                      textInputAction: TextInputAction.next,
+                      enabled: state is NotSignedUp,
+                    ),
+                    const SizedBox(height: 16.0),
+                    AuthField(
+                      title: 'Password',
+                      obsecureText: _hidePassword,
+                      onValueChange: (newValue) =>
+                          BlocProvider.of<SignupBloc>(context).add(
+                        PasswordFieldChanged(newValue),
+                      ),
+                      onSubmitted: (_) =>
+                          BlocProvider.of<SignupBloc>(context).add(Submit()),
+                      trailingIcon: IconButton(
+                        onPressed: _toggleShowPassword,
+                        icon: Icon(
+                          _hidePassword
+                              ? Icons.visibility_off
+                              : Icons.visibility,
+                        ),
+                        splashRadius: 16,
+                      ),
+                      errorText: (state is NotSignedUp)
+                          ? state.signupFieldsState.passwordError
+                          : null,
+                      enabled: state is NotSignedUp,
+                    ),
+                    const SizedBox(height: 40),
+                    IconButton(
+                      onPressed: () =>
+                          BlocProvider.of<SignupBloc>(context).add(Submit()),
+                      icon: const Icon(Icons.arrow_forward_ios),
+                    ),
+                    const Expanded(child: SizedBox()),
+                    GestureDetector(
+                      onTap: () => Navigator.of(context).pop(),
+                      child: Text(
+                        'LOGIN',
+                        style: Theme.of(context)
+                            .textTheme
+                            .titleSmall
+                            ?.copyWith(fontSize: 16),
+                      ),
+                    ),
+                    const SizedBox(height: 8),
+                  ],
+                );
+              },
+            ),
           ),
         ),
       ),
