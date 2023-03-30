@@ -20,10 +20,11 @@ class ChatTop extends StatelessWidget {
       padding: const EdgeInsets.all(12),
       child: Row(
         children: [
-          const CircleAvatar(
+          CircleAvatar(
             radius: 36,
             backgroundImage: CachedNetworkImageProvider(
-              'https://h-o-m-e.org/wp-content/uploads/2022/04/Blank-Profile-Picture-1.jpg',
+              channel.channelImageUrl ??
+                  'https://h-o-m-e.org/wp-content/uploads/2022/04/Blank-Profile-Picture-1.jpg',
             ),
           ),
           const SizedBox(width: 12.0),

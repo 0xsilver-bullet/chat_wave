@@ -3,11 +3,11 @@ import 'package:chat_wave/core/domain/model/channel.dart';
 import 'package:chat_wave/core/domain/model/dm_channel.dart';
 import 'package:chat_wave/core/event/events_bloc/events_bloc.dart';
 import 'package:chat_wave/utils/blocs/app_bloc/app_bloc.dart';
+import 'package:chat_wave/utils/blocs/online_status_bloc/online_status_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../blocs/messages_bloc/messages_bloc.dart';
-import '../blocs/online_bloc/online_bloc.dart';
 import '../widgets/widgets.dart';
 
 class ChatScreen extends StatefulWidget {
@@ -42,7 +42,6 @@ class _ChatScreenState extends State<ChatScreen> {
 
     return MultiBlocProvider(
       providers: [
-        BlocProvider(create: (context) => OnlineBloc()),
         BlocProvider(
           create: (context) =>
               MessagesBloc(channelId: (widget.channel as DmChannel).friendId),
@@ -58,12 +57,13 @@ class _ChatScreenState extends State<ChatScreen> {
         body: SafeArea(
           child: Column(
             children: [
-              BlocBuilder<OnlineBloc, OnlineState>(
+              BlocBuilder<OnlineStatusBloc, OnlineStatusState>(
                 builder: (context, state) {
                   bool? online;
                   // only check online or not in case of dm channel
                   if (widget.channel is DmChannel) {
-                    online = state is Online;
+                    final friendId = (widget.channel as DmChannel).friendId;
+                    online = state.onlineUsers.contains(friendId);
                   }
                   return ChatTop(
                     channel: widget.channel,

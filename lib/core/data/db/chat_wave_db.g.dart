@@ -151,7 +151,8 @@ class _$FriendDao extends FriendDao {
 
   @override
   Future<void> insertAllFriends(List<Friend> friends) async {
-    await _friendInsertionAdapter.insertList(friends, OnConflictStrategy.abort);
+    await _friendInsertionAdapter.insertList(
+        friends, OnConflictStrategy.replace);
   }
 }
 

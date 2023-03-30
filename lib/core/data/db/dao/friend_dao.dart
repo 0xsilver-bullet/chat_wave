@@ -10,6 +10,6 @@ abstract class FriendDao {
   @insert
   Future<void> insertFriend(Friend friend);
 
-  @insert
+  @Insert(onConflict: OnConflictStrategy.replace)
   Future<void> insertAllFriends(List<Friend> friends);
 }
