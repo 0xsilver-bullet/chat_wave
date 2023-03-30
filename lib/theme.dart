@@ -45,6 +45,14 @@ abstract class AppTheme {
       elevation: 0,
       iconTheme: IconThemeData(color: Colors.black),
     ),
+    dialogTheme: const DialogTheme(
+      titleTextStyle: TextStyle(
+        color: Colors.black,
+        fontFamily: 'Montserrat',
+        fontSize: 22,
+      ),
+      backgroundColor: Colors.white,
+    ),
     textTheme: const TextTheme(
       bodySmall: TextStyle(
         color: Colors.black,
@@ -115,6 +123,17 @@ abstract class AppTheme {
       backgroundColor: Colors.black,
       elevation: 0,
       iconTheme: IconThemeData(color: Colors.white),
+    ),
+    dialogTheme: const DialogTheme(
+      titleTextStyle: TextStyle(
+        color: Colors.white,
+        fontFamily: 'Montserrat',
+        fontSize: 22,
+      ),
+      backgroundColor: Color(0x33BDBDBD),
+    ),
+    bottomSheetTheme: const BottomSheetThemeData(
+      backgroundColor: Color(0x33BDBDBD),
     ),
     textTheme: const TextTheme(
       bodySmall: TextStyle(
