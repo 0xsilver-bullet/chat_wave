@@ -1,11 +1,14 @@
 import 'dart:math';
 
-import 'package:cached_network_image/cached_network_image.dart';
-import 'package:chat_wave/core/domain/model/dm_channel.dart';
-import 'package:chat_wave/theme.dart';
 import 'package:flutter/material.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 
-import '../../core/domain/model/channel.dart';
+import 'package:chat_wave/core/domain/model/channel.dart';
+import 'package:chat_wave/core/domain/model/dm_channel.dart';
+import 'package:chat_wave/home/screens/profile_picture_screen.dart';
+import 'package:chat_wave/theme.dart';
+
+import '../util/transparent_route.dart';
 
 class ChatItem extends StatelessWidget {
   const ChatItem({
@@ -28,11 +31,24 @@ class ChatItem extends StatelessWidget {
             Stack(
               alignment: Alignment.bottomRight,
               children: [
-                CircleAvatar(
-                  radius: 36,
-                  backgroundImage: CachedNetworkImageProvider(
-                    channel.channelImageUrl ??
-                        'https://h-o-m-e.org/wp-content/uploads/2022/04/Blank-Profile-Picture-1.jpg',
+                GestureDetector(
+                  onTap: () => Navigator.of(context).push(
+                    TransparentRoute(
+                      builder: (_) => ProfilePictureScreen(
+                          heroTag: channel.channelId,
+                          url: channel.channelImageUrl ??
+                              'https://h-o-m-e.org/wp-content/uploads/2022/04/Blank-Profile-Picture-1.jpg'),
+                    ),
+                  ),
+                  child: Hero(
+                    tag: channel.channelId,
+                    child: CircleAvatar(
+                      radius: 36,
+                      backgroundImage: CachedNetworkImageProvider(
+                        channel.channelImageUrl ??
+                            'https://h-o-m-e.org/wp-content/uploads/2022/04/Blank-Profile-Picture-1.jpg',
+                      ),
+                    ),
                   ),
                 ),
                 AnimatedContainer(
