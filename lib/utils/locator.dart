@@ -5,9 +5,11 @@ import 'package:chat_wave/chat/repository/dm_repository_impl.dart';
 import 'package:chat_wave/core/data/app_preferences_impl.dart';
 import 'package:chat_wave/core/data/db/chat_wave_db.dart';
 import 'package:chat_wave/core/data/network/auth_interceptor.dart';
+import 'package:chat_wave/core/data/online_status_provider_impl.dart';
 import 'package:chat_wave/core/data/secure_local_storage_impl.dart';
 import 'package:chat_wave/core/data/token_manager_impl.dart';
 import 'package:chat_wave/core/domain/app_preferences.dart';
+import 'package:chat_wave/core/domain/online_status_provider.dart';
 import 'package:chat_wave/core/domain/secure_local_storage.dart';
 import 'package:chat_wave/core/domain/token_manager.dart';
 import 'package:chat_wave/core/event/data/event_repository_impl.dart';
@@ -51,11 +53,21 @@ void setupServiceLocator() {
     },
   );
 
+  locator.registerLazySingleton<OnlineStatusProvider>(
+    () => OnlineStatusProviderImpl(),
+  );
+
   locator.registerLazySingleton<EventRepository>(
     () {
       final tokenManager = locator<TokenManager>();
       final db = locator<ChatWaveDb>();
-      return EventRepositoryImpl(tokenManager, db.dmMessageDao, db.friendDao);
+      final onlineStatusProiver = locator<OnlineStatusProvider>();
+      return EventRepositoryImpl(
+        tokenManager,
+        db.dmMessageDao,
+        db.friendDao,
+        onlineStatusProiver,
+      );
     },
   );
 

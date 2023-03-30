@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:chat_wave/core/domain/model/dm_channel.dart';
 import 'package:chat_wave/theme.dart';
 import 'package:flutter/material.dart';
 
@@ -24,12 +25,30 @@ class ChatItem extends StatelessWidget {
         padding: const EdgeInsets.symmetric(vertical: 4.0, horizontal: 12.0),
         child: Row(
           children: [
-            CircleAvatar(
-              radius: 36,
-              backgroundImage: CachedNetworkImageProvider(
-                channel.channelImageUrl ??
-                    'https://h-o-m-e.org/wp-content/uploads/2022/04/Blank-Profile-Picture-1.jpg',
-              ),
+            Stack(
+              alignment: Alignment.bottomRight,
+              children: [
+                CircleAvatar(
+                  radius: 36,
+                  backgroundImage: CachedNetworkImageProvider(
+                    channel.channelImageUrl ??
+                        'https://h-o-m-e.org/wp-content/uploads/2022/04/Blank-Profile-Picture-1.jpg',
+                  ),
+                ),
+                AnimatedContainer(
+                  duration: const Duration(milliseconds: 175),
+                  width: channel is DmChannel && (channel as DmChannel).online
+                      ? 20
+                      : 0,
+                  height: channel is DmChannel && (channel as DmChannel).online
+                      ? 20
+                      : 0,
+                  child: const CircleAvatar(
+                    backgroundColor: Colors.green,
+                    radius: 10,
+                  ),
+                )
+              ],
             ),
             const SizedBox(width: 12.0),
             Expanded(

@@ -21,6 +21,22 @@ class DmChannel extends Channel {
   final String friendName;
   final bool online;
 
+  DmChannel copyWith({
+    String? friendName,
+    int? friendId,
+    bool? online,
+    Message? lastMessage,
+    String? profilePicUrl,
+  }) {
+    return DmChannel(
+      friendName: friendName ?? this.friendName,
+      friendId: friendId ?? this.friendId,
+      online: online ?? this.online,
+      lastMessage: lastMessage ?? this.lastMessage,
+      profilePicUrl: profilePicUrl ?? channelImageUrl,
+    );
+  }
+
   @override
   List<Object> get props => [friendId, friendName, online];
 }

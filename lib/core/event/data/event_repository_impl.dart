@@ -6,6 +6,7 @@ import 'package:chat_wave/core/data/db/dao/friend_dao.dart';
 import 'package:chat_wave/core/data/db/entity/dm_message.dart';
 import 'package:chat_wave/core/data/db/entity/friend.dart';
 import 'package:chat_wave/core/data/network/b_wave_api.dart';
+import 'package:chat_wave/core/domain/online_status_provider.dart';
 import 'package:chat_wave/core/domain/token_manager.dart';
 import 'package:chat_wave/core/event/domain/model/client_event.dart';
 import 'package:chat_wave/core/event/domain/model/server_event.dart';
@@ -14,11 +15,17 @@ import 'package:web_socket_channel/io.dart';
 import '../domain/event_repository.dart';
 
 class EventRepositoryImpl extends EventRepository {
-  EventRepositoryImpl(this._tokenManager, this._dmDao, this._friendDao);
+  EventRepositoryImpl(
+    this._tokenManager,
+    this._dmDao,
+    this._friendDao,
+    this._onlineStatusProvider,
+  );
 
   final TokenManager _tokenManager;
   final DmMessageDao _dmDao;
   final FriendDao _friendDao;
+  final OnlineStatusProvider _onlineStatusProvider;
 
   IOWebSocketChannel? _channel;
   StreamSubscription? _subscription;
@@ -84,8 +91,9 @@ class EventRepositoryImpl extends EventRepository {
       await _handleConnectedToUserEvent(serverEvent);
     } else if (serverEvent is DmSentEvent) {
       await _handleDmSent(serverEvent);
+    } else if (serverEvent is FriendOnlineStatusEvent) {
+      await _handleFriendOnlineStatusEvent(serverEvent);
     }
-    print(eventJson);
   }
 
   Future<void> _handleReceivedMessageEvent(ReceivedDmMessageEvent event) async {
@@ -124,6 +132,18 @@ class EventRepositoryImpl extends EventRepository {
       await _dmDao.completeReplace(event.provisionalId!, message);
     } else {
       await _dmDao.insertDmMessage(message);
+    }
+  }
+
+  Future<void> _handleFriendOnlineStatusEvent(
+    FriendOnlineStatusEvent event,
+  ) async {
+    if (event.online) {
+      // then user is online
+      _onlineStatusProvider.markUserAsOnline(event.friendId);
+    } else {
+      // then he is offline
+      _onlineStatusProvider.markUserAsOffline(event.friendId);
     }
   }
 }

@@ -8,6 +8,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'auth/screen/auth_screens.dart';
 import 'utils/blocs/app_bloc/app_bloc.dart';
+import 'utils/blocs/online_status_bloc/online_status_bloc.dart';
 
 void main() async {
   WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
@@ -34,6 +35,10 @@ class ChatWaveApp extends StatelessWidget {
         BlocProvider(
           create: (_) => ConnectivityBloc(),
         ),
+        BlocProvider(
+          create: (context) => OnlineStatusBloc(),
+          child: Container(),
+        )
       ],
       child: BlocConsumer<AppBloc, AppState>(
         listener: (context, state) {

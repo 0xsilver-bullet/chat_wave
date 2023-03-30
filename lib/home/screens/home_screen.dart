@@ -4,6 +4,7 @@ import 'package:chat_wave/home/blocs/add_friend_bloc/add_friend_bloc.dart';
 import 'package:chat_wave/home/blocs/channels_bloc/channels_bloc.dart';
 import 'package:chat_wave/setting/screen/settings_screen.dart';
 import 'package:chat_wave/utils/blocs/connectivity_bloc/connectivity_bloc.dart';
+import 'package:chat_wave/utils/blocs/online_status_bloc/online_status_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_animated_dialog/flutter_animated_dialog.dart';
@@ -83,7 +84,9 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
               const SizedBox(height: 4.0),
               Expanded(
                 child: BlocProvider(
-                  create: (_) => ChannelsBloc(),
+                  create: (_) => ChannelsBloc(
+                    BlocProvider.of<OnlineStatusBloc>(context),
+                  ),
                   child: BlocBuilder<ChannelsBloc, ChannelsState>(
                     builder: (ctx, state) {
                       final channels = (state as ChannelsList).channels;
