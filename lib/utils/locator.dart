@@ -42,14 +42,16 @@ void setupServiceLocator() {
 
   locator.registerSingletonAsync<ChatWaveDb>(
     () async {
-      return await ChatWaveDb.initializeDb();
+      final db = ChatWaveDb();
+      await db.initialize();
+      return db;
     },
   );
 
   locator.registerLazySingleton<FriendRepository>(
     () {
       final db = locator<ChatWaveDb>();
-      return FriendRepositoryImpl(db);
+      return FriendRepositoryImpl(db.friendDao);
     },
   );
 

@@ -1,4 +1,3 @@
-import 'package:chat_wave/core/data/db/chat_wave_db.dart';
 import 'package:chat_wave/core/data/db/dao/friend_dao.dart';
 import 'package:chat_wave/core/data/db/entity/friend.dart';
 import 'package:chat_wave/home/data/mapper/friend_mapper.dart';
@@ -7,16 +6,16 @@ import 'package:chat_wave/home/domain/error/add_friend_error.dart';
 import 'package:chat_wave/home/domain/repository/friend_repository.dart';
 
 class FriendRepositoryImpl implements FriendRepository {
-  FriendRepositoryImpl(ChatWaveDb db) : friendDao = db.friendDao {
+  FriendRepositoryImpl(FriendDao friendDao) : _friendDao = friendDao {
     _init();
   }
 
   final api = FriendsApiClient();
-  final FriendDao friendDao;
+  final FriendDao _friendDao;
 
   @override
-  Stream<List<Friend>> watchUserFriends() {
-    return friendDao.findAllFriends();
+  Stream<List<FriendEntity>> watchUserFriends() {
+    return _friendDao.watchFriends;
   }
 
   @override
@@ -24,7 +23,7 @@ class FriendRepositoryImpl implements FriendRepository {
     final apiResponse = await api.addUserAsFriend(username);
     if (apiResponse.isSuccessful) {
       final friend = apiResponse.data!.toFriend();
-      await friendDao.insertFriend(friend);
+      await _friendDao.insertFriend(friend);
     } else {
       final error = apiResponse.error!;
       switch (error.errorCode) {
@@ -46,7 +45,7 @@ class FriendRepositoryImpl implements FriendRepository {
             (networkFriend) => networkFriend.toFriend(),
           )
           .toList();
-      friendDao.insertAllFriends(friends);
+      _friendDao.insertAllFriends(friends);
     }
   }
 }

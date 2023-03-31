@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
 
-import 'package:chat_wave/core/data/db/dao/dm_message_dao.dart';
 import 'package:chat_wave/core/data/db/dao/friend_dao.dart';
 import 'package:chat_wave/core/data/db/entity/dm_message.dart';
 import 'package:chat_wave/core/data/db/entity/friend.dart';
@@ -12,6 +11,7 @@ import 'package:chat_wave/core/event/domain/model/client_event.dart';
 import 'package:chat_wave/core/event/domain/model/server_event.dart';
 import 'package:web_socket_channel/io.dart';
 
+import '../../data/db/dao/db_message_dao.dart';
 import '../domain/event_repository.dart';
 
 class EventRepositoryImpl extends EventRepository {
@@ -106,11 +106,11 @@ class EventRepositoryImpl extends EventRepository {
       isOwnMessage: false,
       seen: false,
     );
-    await _dmDao.insertDmMessage(message);
+    await _dmDao.insert(message);
   }
 
   Future<void> _handleConnectedToUserEvent(ConnectedToUserEvent event) async {
-    final friend = Friend(
+    final friend = FriendEntity(
       name: event.user.name,
       username: event.user.username,
       id: event.user.id,
@@ -129,9 +129,9 @@ class EventRepositoryImpl extends EventRepository {
       seen: false,
     );
     if (event.provisionalId != null) {
-      await _dmDao.completeReplace(event.provisionalId!, message);
+      await _dmDao.replace(event.provisionalId!, message);
     } else {
-      await _dmDao.insertDmMessage(message);
+      await _dmDao.insert(message);
     }
   }
 
