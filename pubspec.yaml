@@ -33,6 +33,7 @@ dependencies:
   image_cropper: ^3.0.2
   sqflite: ^2.2.6
   path: ^1.8.2
+  rxdart: ^0.27.7
 
 dev_dependencies:
   flutter_test:
