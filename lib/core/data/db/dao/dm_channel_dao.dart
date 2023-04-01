@@ -66,6 +66,10 @@ class DmChannelDao {
     _updateStream();
   }
 
+  void refreshChannelsStream() {
+    _updateStream();
+  }
+
   Future<void> _updateStream() async {
     final maps = await _db.rawQuery(
       '''

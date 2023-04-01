@@ -20,9 +20,9 @@ class ChatWaveDb {
         _initializeDAOs(db);
       },
     );
-    _dmMessageDao = DmMessageDao(_database!);
-    _friendDao = FriendDao(_database!);
     _dmChannelDao = DmChannelDao(_database!);
+    _dmMessageDao = DmMessageDao(_database!, _dmChannelDao!);
+    _friendDao = FriendDao(_database!);
     return _database!;
   }
 

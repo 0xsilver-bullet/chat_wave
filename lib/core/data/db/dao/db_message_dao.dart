@@ -1,10 +1,15 @@
 import 'dart:async';
 
+import 'package:chat_wave/core/data/db/dao/dm_channel_dao.dart';
 import 'package:chat_wave/core/data/db/entity/dm_message.dart';
 import 'package:sqflite/sqflite.dart';
 
 class DmMessageDao {
-  DmMessageDao(Database db) : _db = db {
+  DmMessageDao(
+    Database db,
+    DmChannelDao dmChannelDao,
+  )   : _db = db,
+        _dmChannelDao = dmChannelDao {
     _streamController = StreamController<List<DmMessageEntity>>.broadcast();
   }
 
@@ -27,6 +32,7 @@ class DmMessageDao {
   static const tableName = 't_dm_messages';
 
   final Database _db;
+  final DmChannelDao _dmChannelDao;
   int? _watchedFriendId;
   late final StreamController<List<DmMessageEntity>> _streamController;
 
@@ -37,6 +43,7 @@ class DmMessageDao {
       conflictAlgorithm: ConflictAlgorithm.fail,
     );
     _updateStream();
+    _dmChannelDao.updateChannelLastMessage(message.senderId, message.id);
   }
 
   Future<void> insertAll(List<DmMessageEntity> messages) async {
@@ -49,6 +56,10 @@ class DmMessageDao {
     }
     await batch.commit();
     _updateStream();
+    // update channels last message
+    for (final message in messages) {
+      _dmChannelDao.updateChannelLastMessage(message.senderId, message.id);
+    }
   }
 
   // this method will support only one channel at a time.
@@ -68,6 +79,7 @@ class DmMessageDao {
       whereArgs: [id],
     );
     _updateStream();
+    _dmChannelDao.refreshChannelsStream();
     return deletedCount;
   }
 
@@ -84,6 +96,7 @@ class DmMessageDao {
       },
     );
     _updateStream();
+    _dmChannelDao.refreshChannelsStream();
   }
 
   Future<void> _updateStream() async {
