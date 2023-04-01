@@ -96,7 +96,10 @@ class DmMessageDao {
       },
     );
     _updateStream();
-    _dmChannelDao.refreshChannelsStream();
+    _dmChannelDao.updateChannelLastMessage(
+      newMessage.receiverId,
+      newMessage.id,
+    );
   }
 
   Future<void> _updateStream() async {

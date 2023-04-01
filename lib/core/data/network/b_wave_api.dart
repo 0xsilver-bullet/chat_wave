@@ -1,4 +1,4 @@
 abstract class BWaveApi {
-  static const String baseUrl = 'http://192.168.1.6:8080/';
-  static const String eventsUrl = 'ws://192.168.1.6:8080/events';
+  static const String baseUrl = 'https://b-wave.publicvm.com/';
+  static const String eventsUrl = 'wss://b-wave.publicvm.com/events';
 }
