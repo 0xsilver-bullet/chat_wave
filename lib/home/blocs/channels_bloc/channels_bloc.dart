@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:bloc/bloc.dart';
 import 'package:chat_wave/core/domain/model/channel.dart';
 import 'package:chat_wave/core/domain/model/dm_channel.dart';
+import 'package:chat_wave/home/data/mapper/message_mapper.dart';
 import 'package:chat_wave/home/domain/repository/friend_repository.dart';
 import 'package:chat_wave/utils/blocs/online_status_bloc/online_status_bloc.dart';
 import 'package:chat_wave/utils/locator.dart';
@@ -14,9 +15,7 @@ part 'channels_state.dart';
 
 class ChannelsBloc extends Bloc<ChannelsEvent, ChannelsState> {
   ChannelsBloc(this._onlineBloc) : super(const ChannelsList([])) {
-    on<ChannelsLoaded>((event, emit) {
-      emit(ChannelsList(event.channels));
-    });
+    on<ChannelsLoaded>(_handleChannelsLoadedEvent);
     _initializeFriendsStreamSubscription();
     _initializeOnlineStreamSubscription();
   }
@@ -27,21 +26,30 @@ class ChannelsBloc extends Bloc<ChannelsEvent, ChannelsState> {
   late StreamSubscription _friendsStreamSubscription;
   late StreamSubscription _onlineStatusSubscription;
 
+  void _handleChannelsLoadedEvent(
+    ChannelsLoaded event,
+    Emitter<ChannelsState> emit,
+  ) async {
+    final List<Channel> newList = [];
+    newList.addAll(event.channels);
+    emit(ChannelsList(newList));
+  }
+
   void _initializeFriendsStreamSubscription() {
-    _friendsStreamSubscription = repo.watchUserFriends().listen(
-      (friends) {
-        final channels = friends
+    _friendsStreamSubscription = repo.watchDmChannels().listen(
+      (channels) {
+        final newList = channels
             .map(
-              (friend) => DmChannel(
-                friendId: friend.id,
-                friendName: friend.name,
-                profilePicUrl: friend.profilePicUrl,
-                lastMessage: null,
+              (channel) => DmChannel(
+                friendId: channel.id,
+                friendName: channel.name,
+                profilePicUrl: channel.profilePicUrl,
+                lastMessage: channel.lastMessage?.toDmMessage(),
                 online: false,
               ),
             )
             .toList();
-        add(ChannelsLoaded(channels));
+        add(ChannelsLoaded(newList));
       },
     );
   }

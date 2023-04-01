@@ -1,4 +1,5 @@
 import 'package:chat_wave/core/data/db/dao/db_message_dao.dart';
+import 'package:chat_wave/core/data/db/dao/dm_channel_dao.dart';
 import 'package:chat_wave/core/data/db/dao/friend_dao.dart';
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
@@ -21,6 +22,7 @@ class ChatWaveDb {
     );
     _dmMessageDao = DmMessageDao(_database!);
     _friendDao = FriendDao(_database!);
+    _dmChannelDao = DmChannelDao(_database!);
     return _database!;
   }
 
@@ -28,6 +30,7 @@ class ChatWaveDb {
   static Database? _database;
   static DmMessageDao? _dmMessageDao;
   static FriendDao? _friendDao;
+  static DmChannelDao? _dmChannelDao;
 
   Future<Database> get database async {
     if (_database != null) {
@@ -38,11 +41,12 @@ class ChatWaveDb {
   }
 
   DmMessageDao get dmMessageDao => _dmMessageDao!;
-
   FriendDao get friendDao => _friendDao!;
+  DmChannelDao get dmChannelDao => _dmChannelDao!;
 
   Future<void> _initializeDAOs(Database db) async {
     await DmMessageDao.createTable(db);
     await FriendDao.createTable(db);
+    await DmChannelDao.createTable(db);
   }
 }

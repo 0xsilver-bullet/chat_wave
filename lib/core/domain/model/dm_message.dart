@@ -24,8 +24,9 @@ class DmMessage extends Message {
   final bool seen;
 
   @override
-  List<Object> get props => [
-        receiverId,
-        seen,
-      ];
+  List<Object?> get props => super.props
+    ..addAll([
+      receiverId,
+      seen,
+    ]);
 }

@@ -51,7 +51,10 @@ void setupServiceLocator() {
   locator.registerLazySingleton<FriendRepository>(
     () {
       final db = locator<ChatWaveDb>();
-      return FriendRepositoryImpl(db.friendDao);
+      return FriendRepositoryImpl(
+        db.friendDao,
+        db.dmChannelDao,
+      );
     },
   );
 

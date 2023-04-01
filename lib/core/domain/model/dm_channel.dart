@@ -39,5 +39,6 @@ class DmChannel extends Channel {
   }
 
   @override
-  List<Object> get props => [friendId, friendName, online];
+  List<Object?> get props =>
+      super.props..addAll([friendId, friendName, online]);
 }
