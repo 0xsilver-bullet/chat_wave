@@ -1,4 +1,4 @@
-import 'package:chat_wave/core/data/db/dao/dm_message_dao.dart';
+import 'package:chat_wave/core/data/db/dao/db_message_dao.dart';
 import 'package:chat_wave/core/data/db/entity/dm_message.dart';
 import 'package:chat_wave/core/domain/app_preferences.dart';
 import 'package:chat_wave/core/domain/model/dm_message.dart';
@@ -27,18 +27,18 @@ class DmRepositoryImpl extends DmRepository {
     final message = DmMessageEntity(
       id: provisionalId,
       text: text,
-      senderId: userId!,
+      senderId: userId,
       receiverId: receiverId,
       timestamp: DateTime.now().millisecondsSinceEpoch,
       isOwnMessage: true,
       seen: false,
     );
-    return await _dmDao.insertDmMessage(message);
+    return await _dmDao.insert(message);
   }
 
   @override
   Stream<List<DmMessage>> watchFriendDms(int friendId) {
-    return _dmDao.watchDmsFrom(friendId).map(
+    return _dmDao.watchDmChannel(friendId).map(
           (dmsEntityList) => dmsEntityList
               .map(
                 (dmEntity) => DmMessage(

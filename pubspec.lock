@@ -313,14 +313,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.1.0"
-  floor:
-    dependency: "direct main"
-    description:
-      name: floor
-      sha256: "47b30dc15d2415533b6d09b9eaff8250472584db218869530c2b760e607ca7b5"
-      url: "https://pub.dev"
-    source: hosted
-    version: "1.4.1"
   floor_annotation:
     dependency: transitive
     description:
@@ -729,7 +721,7 @@ packages:
     source: hosted
     version: "2.1.0"
   path:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: path
       sha256: db9d4f58c908a4ba5953fcee2ae317c94889433e5024c27ce74a37f94267945b
@@ -865,7 +857,7 @@ packages:
     source: hosted
     version: "1.2.2"
   rxdart:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: rxdart
       sha256: "0c7c0cedd93788d996e33041ffecda924cc54389199cde4e6a34b440f50044cb"
@@ -981,22 +973,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.4.3"
-  sqflite_common_ffi:
-    dependency: transitive
-    description:
-      name: sqflite_common_ffi
-      sha256: e435a9dcd0ca79ba6aea677468e6f7cb8859891294a8f34226685f2cf2002ea2
-      url: "https://pub.dev"
-    source: hosted
-    version: "2.2.1+1"
-  sqlite3:
-    dependency: transitive
-    description:
-      name: sqlite3
-      sha256: "822d321a008e194d7929357e5b58d2e4a04ab670d137182f9759152aa33180ff"
-      url: "https://pub.dev"
-    source: hosted
-    version: "1.10.1"
   stack_trace:
     dependency: transitive
     description:

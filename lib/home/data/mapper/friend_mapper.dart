@@ -1,13 +1,24 @@
+import 'package:chat_wave/core/data/db/entity/dm_channel.dart';
 import 'package:chat_wave/core/data/db/entity/friend.dart';
 import 'package:chat_wave/home/data/network/dto/friend_dto.dart';
 
 extension Mapping on FriendDto {
-  Friend toFriend() {
-    return Friend(
-      name: this.name,
-      username: this.username,
-      id: this.id,
-      profilePicUrl: this.profilePicUrl,
+  FriendEntity toFriend() {
+    return FriendEntity(
+      name: name,
+      username: username,
+      id: id,
+      profilePicUrl: profilePicUrl,
+    );
+  }
+
+  DmChannelEntity toChannel() {
+    return DmChannelEntity(
+      id: id,
+      name: name,
+      username: username,
+      profilePicUrl: profilePicUrl,
+      lastMessage: null,
     );
   }
 }

@@ -1,5 +1,3 @@
-import 'dart:math';
-
 import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 
@@ -103,7 +101,7 @@ class ChatItem extends StatelessWidget {
                       text: TextSpan(
                         style: Theme.of(context).textTheme.bodySmall,
                         children: [
-                          if (Random().nextBool())
+                          if (channel.lastMessage?.isOwnMessage ?? false)
                             const TextSpan(
                               text: 'You: ',
                               style: TextStyle(

@@ -24,8 +24,6 @@ dependencies:
   connectivity_plus: ^3.0.3
   dio: ^5.0.2
   get_it: ^7.2.0
-  floor: ^1.4.1
-  sqflite: ^2.2.6
   flutter_animated_dialog: ^2.0.1
   web_socket_channel: ^2.3.0
   uuid: ^3.0.6
@@ -33,6 +31,9 @@ dependencies:
   shared_preferences: ^2.0.20
   image_picker: ^0.8.7+1
   image_cropper: ^3.0.2
+  sqflite: ^2.2.6
+  path: ^1.8.2
+  rxdart: ^0.27.7
 
 dev_dependencies:
   flutter_test:
