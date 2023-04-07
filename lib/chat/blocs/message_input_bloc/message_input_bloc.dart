@@ -1,5 +1,5 @@
 import 'package:bloc/bloc.dart';
-import 'package:chat_wave/chat/repository/dm_repository.dart';
+import 'package:chat_wave/chat/data/repository/message_repository.dart';
 import 'package:chat_wave/core/event/events_bloc/events_bloc.dart';
 import 'package:chat_wave/utils/locator.dart';
 import 'package:equatable/equatable.dart';
@@ -18,7 +18,7 @@ class MessageInputBloc extends Bloc<MessageInputEvent, MessageInputState> {
   }
 
   final EventsBloc eventsBloc;
-  final _dmRepository = locator<DmRepository>();
+  final _messageRepository = locator<MessageRepository>();
   final int sendChannelId;
   final _uuId = const Uuid();
 
@@ -28,7 +28,7 @@ class MessageInputBloc extends Bloc<MessageInputEvent, MessageInputState> {
   ) async {
     if (event.message.isEmpty) return;
     final provisionalId = _uuId.v4();
-    _dmRepository.saveMessage(event.message, sendChannelId, provisionalId);
+    _messageRepository.saveMessage(event.message, sendChannelId, provisionalId);
     eventsBloc.add(
       SendDm(
         text: event.message,

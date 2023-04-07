@@ -84,9 +84,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
               const SizedBox(height: 4.0),
               Expanded(
                 child: BlocProvider(
-                  create: (_) => ChannelsBloc(
-                    BlocProvider.of<OnlineStatusBloc>(context),
-                  ),
+                  create: (_) => ChannelsBloc(),
                   child: BlocBuilder<ChannelsBloc, ChannelsState>(
                     builder: (ctx, state) {
                       final channels = (state as ChannelsList).channels;

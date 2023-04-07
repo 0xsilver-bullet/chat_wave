@@ -1,0 +1,4 @@
+enum ChannelType {
+  dm,
+  group,
+}

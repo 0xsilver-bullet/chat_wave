@@ -43,13 +43,12 @@ class _ChatScreenState extends State<ChatScreen> {
     return MultiBlocProvider(
       providers: [
         BlocProvider(
-          create: (context) =>
-              MessagesBloc(channelId: (widget.channel as DmChannel).friendId),
+          create: (context) => MessagesBloc(channelId: widget.channel.id),
         ),
         BlocProvider(
           create: (_) => MessageInputBloc(
             eventsBloc: BlocProvider.of<EventsBloc>(context),
-            sendChannelId: (widget.channel as DmChannel).friendId,
+            sendChannelId: widget.channel.id,
           ),
         )
       ],
@@ -62,7 +61,8 @@ class _ChatScreenState extends State<ChatScreen> {
                   bool? online;
                   // only check online or not in case of dm channel
                   if (widget.channel is DmChannel) {
-                    final friendId = (widget.channel as DmChannel).friendId;
+                    final friendId =
+                        (widget.channel as DmChannel).friendInfo.id;
                     online = state.onlineUsers.contains(friendId);
                   }
                   return ChatTop(

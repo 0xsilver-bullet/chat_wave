@@ -1,18 +1,20 @@
-import 'package:chat_wave/core/data/db/entity/dm_message.dart';
-import 'package:chat_wave/core/domain/model/dm_message.dart';
-import 'package:timeago/timeago.dart' as timeago;
+import 'package:chat_wave/core/data/db/entity/message.dart';
+import 'package:chat_wave/core/domain/model/message.dart';
+import 'package:intl/intl.dart';
 
-extension Mapper on DmMessageEntity {
-  DmMessage toDmMessage() {
-    final messageTime = DateTime.fromMillisecondsSinceEpoch(timestamp);
-    return DmMessage(
-      formattedDate: timeago.format(messageTime),
+extension Mapper on MessageEntity {
+  Message toMessage() {
+    final dateTime = DateTime.fromMillisecondsSinceEpoch(timestamp);
+    final formattedDate = DateFormat('hh::mm a').format(dateTime);
+    return Message(
       id: id,
-      isOwnMessage: isOwnMessage,
-      senderId: senderId,
+      channelId: channelId,
       text: text,
-      receiverId: receiverId,
-      seen: seen,
+      imageUrl: imageUrl,
+      formattedDate: formattedDate,
+      senderId: senderId,
+      seen: seenBy.length > 1,
+      isOwnMessage: isOwnMessage,
     );
   }
 }

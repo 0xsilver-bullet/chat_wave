@@ -1,4 +1,5 @@
-import 'package:chat_wave/core/data/network/dto/dm_message_dto.dart';
+import 'package:chat_wave/core/data/network/dto/channel_dto.dart';
+import 'package:chat_wave/core/data/network/dto/message_dto.dart';
 import 'package:chat_wave/core/data/network/dto/user_info_dto.dart';
 import 'package:flutter/foundation.dart';
 
@@ -11,11 +12,11 @@ abstract class ServerEvent {
   factory ServerEvent.parse(Map<String, dynamic> json) {
     final eventName = json['event'];
     switch (eventName) {
-      case DmSentEvent.eventName:
-        return DmSentEvent.fromJson(json);
+      case MessageSentEvent.eventName:
+        return MessageSentEvent.fromJson(json);
 
-      case UpdateDmMessageEvent.eventName:
-        return UpdateDmMessageEvent.formJson(json);
+      case UpdateMessagesEvent.eventName:
+        return UpdateMessagesEvent.formJson(json);
 
       case ConnectedToUserEvent.eventName:
         return ConnectedToUserEvent.formJson(json);
@@ -23,8 +24,8 @@ abstract class ServerEvent {
       case FriendOnlineStatusEvent.eventName:
         return FriendOnlineStatusEvent.fromJson(json);
 
-      case ReceivedDmMessageEvent.eventName:
-        return ReceivedDmMessageEvent.fromJson(json);
+      case ReceivedMessageEvent.eventName:
+        return ReceivedMessageEvent.fromJson(json);
 
       default:
         throw Exception('Unexpected event');
@@ -34,35 +35,37 @@ abstract class ServerEvent {
 
 // To indicate that a message is sent successfully
 @immutable
-class DmSentEvent extends ServerEvent {
-  const DmSentEvent({
+class MessageSentEvent extends ServerEvent {
+  const MessageSentEvent({
     required this.messageDto,
     required this.provisionalId,
-  }) : super(DmSentEvent.eventName);
+  }) : super(MessageSentEvent.eventName);
 
-  DmSentEvent.fromJson(Map<String, dynamic> json)
-      : messageDto = DmMessageDto.fromJson(json['message']),
+  MessageSentEvent.fromJson(Map<String, dynamic> json)
+      : messageDto = MessageDto.fromJson(json['message']),
         provisionalId = json['provisionalId'],
-        super(DmSentEvent.eventName);
+        super(MessageSentEvent.eventName);
 
-  static const eventName = 'dm_sent_event_s_event';
+  static const eventName = 'message_event_s_event';
 
-  final DmMessageDto messageDto;
+  final MessageDto messageDto;
   final String? provisionalId;
 }
 
 @immutable
-class UpdateDmMessageEvent extends ServerEvent {
-  const UpdateDmMessageEvent(this.messageDto)
-      : super(UpdateDmMessageEvent.eventName);
+class UpdateMessagesEvent extends ServerEvent {
+  const UpdateMessagesEvent(this.updatedMessages)
+      : super(UpdateMessagesEvent.eventName);
 
-  UpdateDmMessageEvent.formJson(Map<String, dynamic> json)
-      : messageDto = DmMessageDto.fromJson(json['message']),
-        super(UpdateDmMessageEvent.eventName);
+  UpdateMessagesEvent.formJson(Map<String, dynamic> json)
+      : updatedMessages = (json['messages'] as List)
+            .map((msgJson) => MessageDto.fromJson(msgJson))
+            .toList(),
+        super(UpdateMessagesEvent.eventName);
 
-  static const eventName = 'update_dm_message_s_event';
+  static const eventName = 'update_messages_s_event';
 
-  final DmMessageDto messageDto;
+  final List<MessageDto> updatedMessages;
 }
 
 @immutable
@@ -71,7 +74,7 @@ class ConnectedToUserEvent extends ServerEvent {
 
   ConnectedToUserEvent.formJson(Map<String, dynamic> json)
       : user = UserInfoDto.fromJson(json['user']),
-        super(UpdateDmMessageEvent.eventName);
+        super(ConnectedToUserEvent.eventName);
 
   static const eventName = 'connected_to_user_s_event';
 
@@ -97,15 +100,28 @@ class FriendOnlineStatusEvent extends ServerEvent {
 }
 
 @immutable
-class ReceivedDmMessageEvent extends ServerEvent {
-  const ReceivedDmMessageEvent(this.messageDto)
-      : super(ReceivedDmMessageEvent.eventName);
+class ReceivedMessageEvent extends ServerEvent {
+  const ReceivedMessageEvent(this.messageDto)
+      : super(ReceivedMessageEvent.eventName);
 
-  ReceivedDmMessageEvent.fromJson(Map<String, dynamic> json)
-      : messageDto = DmMessageDto.fromJson(json['message']),
-        super(ReceivedDmMessageEvent.eventName);
+  ReceivedMessageEvent.fromJson(Map<String, dynamic> json)
+      : messageDto = MessageDto.fromJson(json['message']),
+        super(ReceivedMessageEvent.eventName);
 
   static const eventName = 'received_message_s_event';
 
-  final DmMessageDto messageDto;
+  final MessageDto messageDto;
+}
+
+@immutable
+class AddedToChannel extends ServerEvent {
+  const AddedToChannel(this.channelDto) : super(AddedToChannel.eventName);
+
+  AddedToChannel.fromJson(Map<String, dynamic> json)
+      : channelDto = ChannelDto.fromJson(json['channel']),
+        super(AddedToChannel.eventName);
+
+  static const eventName = 'added_to_channel_s_event';
+
+  final ChannelDto channelDto;
 }

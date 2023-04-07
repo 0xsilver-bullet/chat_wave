@@ -7,7 +7,7 @@ class OnlineStatusProviderImpl extends OnlineStatusProvider {
   final List<int> _onlineList = [];
 
   OnlineStatusProviderImpl() {
-    _onlineStreamControlelr = StreamController<List<int>>();
+    _onlineStreamControlelr = StreamController<List<int>>.broadcast();
     _onlineStreamControlelr.add([]);
   }
 

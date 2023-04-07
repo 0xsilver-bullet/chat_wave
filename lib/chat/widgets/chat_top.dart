@@ -23,7 +23,7 @@ class ChatTop extends StatelessWidget {
           CircleAvatar(
             radius: 36,
             backgroundImage: CachedNetworkImageProvider(
-              channel.channelImageUrl ??
+              channel.imageUrl ??
                   'https://h-o-m-e.org/wp-content/uploads/2022/04/Blank-Profile-Picture-1.jpg',
             ),
           ),
@@ -34,7 +34,7 @@ class ChatTop extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  channel.channelName,
+                  channel.name,
                   style: Theme.of(context).textTheme.displayMedium,
                   overflow: TextOverflow.ellipsis,
                   maxLines: 1,

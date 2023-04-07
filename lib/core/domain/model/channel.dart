@@ -5,22 +5,22 @@ import 'package:flutter/foundation.dart';
 @immutable
 abstract class Channel extends Equatable {
   const Channel({
-    required this.channelId,
-    required this.channelName,
+    required this.id,
+    required this.name,
     this.lastMessage,
-    this.channelImageUrl,
+    this.imageUrl,
   });
 
-  final int channelId;
-  final String channelName;
+  final int id;
+  final String name;
   final Message? lastMessage;
-  final String? channelImageUrl;
+  final String? imageUrl;
 
   @override
   List<Object?> get props => [
-        channelId,
-        channelName,
+        id,
+        name,
         lastMessage,
-        channelImageUrl,
+        imageUrl,
       ];
 }
