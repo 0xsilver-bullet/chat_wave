@@ -47,4 +47,18 @@ class FriendsApiClient {
       );
     }
   }
+
+  Future<ApiResponse<String>> requestFriendshipSecret() async {
+    final response =
+        await _dio.post('${BWaveApi.baseUrl}connection/generate-secret');
+    if (response.statusCode == 200) {
+      final secret = response.data['secret'];
+      return ApiResponse(isSuccessful: true, data: secret);
+    } else {
+      return ApiResponse(
+        isSuccessful: false,
+        error: ApiError.fromJson(response.data),
+      );
+    }
+  }
 }

@@ -9,12 +9,12 @@ class FriendRepositoryImpl implements FriendRepository {
     FriendDao friendDao,
   ) : _friendDao = friendDao;
 
-  final api = FriendsApiClient();
+  final _api = FriendsApiClient();
   final FriendDao _friendDao;
 
   @override
   Future<void> addFriend(String username) async {
-    final apiResponse = await api.addUserAsFriend(username);
+    final apiResponse = await _api.addUserAsFriend(username);
     if (apiResponse.isSuccessful) {
       final friend = apiResponse.data!.toFriend();
       await _friendDao.insert(friend);
@@ -29,5 +29,12 @@ class FriendRepositoryImpl implements FriendRepository {
           throw Exception();
       }
     }
+  }
+
+  @override
+  Future<String> generateFriendshipSecret() async {
+    final apiResponse = await _api.requestFriendshipSecret();
+    if (!apiResponse.isSuccessful) throw Exception('Can\'t fetch api secret');
+    return apiResponse.data!;
   }
 }
