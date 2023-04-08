@@ -11,6 +11,7 @@ import 'package:chat_wave/core/data/db/util/channel_type.dart';
 import 'package:collection/collection.dart';
 
 import 'package:chat_wave/core/data/db/entity/channel_full.dart';
+import 'package:rxdart/rxdart.dart';
 import 'package:sqflite/sqflite.dart';
 
 /// This is mainly used to query the channels with their full data like the last message
@@ -25,16 +26,19 @@ class ChannelFullDao {
         _friendDao = friendDao,
         _channelDao = channelDao,
         _channelMembershipDao = channelMembershipDao {
-    _streamController = StreamController();
+    _streamController = BehaviorSubject.seeded([]);
   }
 
   final Database _db;
   final FriendDao _friendDao;
   final ChannelDao _channelDao;
   final ChannelMembershipDao _channelMembershipDao;
-  late final StreamController<List<ChannelFullEntity>> _streamController;
+  late final BehaviorSubject<List<ChannelFullEntity>> _streamController;
 
-  Stream<List<ChannelFullEntity>> get watchChannels => _streamController.stream;
+  Stream<List<ChannelFullEntity>> get watchChannels {
+    updateStream();
+    return _streamController.stream;
+  }
 
   /// WARNING : This method ignores any values in last message
   Future<void> insertAll(List<ChannelFullEntity> channelsData) async {

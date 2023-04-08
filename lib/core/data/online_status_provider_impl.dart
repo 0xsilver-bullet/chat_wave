@@ -1,14 +1,15 @@
 import 'dart:async';
 
+import 'package:rxdart/rxdart.dart';
+
 import '../domain/online_status_provider.dart';
 
 class OnlineStatusProviderImpl extends OnlineStatusProvider {
-  late final StreamController<List<int>> _onlineStreamControlelr;
+  late final BehaviorSubject<List<int>> _onlineStreamControlelr;
   final List<int> _onlineList = [];
 
   OnlineStatusProviderImpl() {
-    _onlineStreamControlelr = StreamController<List<int>>.broadcast();
-    _onlineStreamControlelr.add([]);
+    _onlineStreamControlelr = BehaviorSubject.seeded([]);
   }
 
   @override

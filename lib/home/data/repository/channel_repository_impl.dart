@@ -24,7 +24,7 @@ class ChannelRepositoryImpl extends ChannelRepository {
   final _api = ChannelsApiClient();
 
   @override
-  Stream<List<Channel>> get watchChannels => Rx.combineLatest2(
+  Stream<List<Channel>> get watchChannels => CombineLatestStream.combine2(
         _channelFullDao.watchChannels,
         _onlineStatusProvider.onlineUsersStream,
         (channels, onlineUsersIds) {
