@@ -64,6 +64,6 @@ class ChannelRepositoryImpl extends ChannelRepository {
     final channels = apiResponse.data!
         .map((channelDto) => channelDto.toFullChannelEntity())
         .toList();
-    // TODO: save this data to database.
+    await _channelFullDao.insertAll(channels);
   }
 }

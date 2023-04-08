@@ -41,6 +41,18 @@ class FriendDao {
     );
   }
 
+  Future<void> upsertAll(List<FriendEntity> friends) async {
+    final batch = _db.batch();
+    for (final friend in friends) {
+      batch.insert(
+        tableName,
+        friend.toMap(),
+        conflictAlgorithm: ConflictAlgorithm.replace,
+      );
+    }
+    await batch.commit();
+  }
+
   // returns deleted count
   Future<int> deleteById(int friendId) async {
     return await _db.delete(
