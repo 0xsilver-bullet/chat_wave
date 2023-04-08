@@ -15,8 +15,10 @@ import 'package:chat_wave/core/domain/token_manager.dart';
 import 'package:chat_wave/core/event/data/event_repository_impl.dart';
 import 'package:chat_wave/core/event/domain/event_repository.dart';
 import 'package:chat_wave/home/data/repository/channel_repository_impl.dart';
+import 'package:chat_wave/home/data/repository/connection_repository_impl.dart';
 import 'package:chat_wave/home/data/repository/friend_repository_impl.dart';
 import 'package:chat_wave/home/domain/repository/channel_repository.dart';
+import 'package:chat_wave/home/domain/repository/connection_repository.dart';
 import 'package:chat_wave/home/domain/repository/friend_repository.dart';
 import 'package:chat_wave/setting/data/repository/profile_repository_impl.dart';
 import 'package:chat_wave/setting/domain/repository/profile_repository.dart';
@@ -52,8 +54,14 @@ void setupServiceLocator() {
 
   locator.registerLazySingleton<FriendRepository>(
     () {
+      return FriendRepositoryImpl();
+    },
+  );
+
+  locator.registerLazySingleton<ConnectionRepository>(
+    () {
       final db = locator<ChatWaveDb>();
-      return FriendRepositoryImpl(db.friendDao);
+      return ConnectionRepositoryImpl(db.friendDao);
     },
   );
 

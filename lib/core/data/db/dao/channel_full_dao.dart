@@ -74,7 +74,7 @@ class ChannelFullDao {
           message.image_url AS message_image_url,
           message.channel_id AS message_channel_id,
           message.sender_id AS message_sender_id,
-          message.seen_by AS message_sender_id,
+          message.seen_by AS message_seen_by,
           message.timestamp AS message_timestamp
         FROM t_messages message
         INNER JOIN (

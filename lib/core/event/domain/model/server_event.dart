@@ -27,6 +27,9 @@ abstract class ServerEvent {
       case ReceivedMessageEvent.eventName:
         return ReceivedMessageEvent.fromJson(json);
 
+      case AddedToChannel.eventName:
+        return AddedToChannel.fromJson(json);
+
       default:
         throw Exception('Unexpected event');
     }
