@@ -104,7 +104,7 @@ class EventRepositoryImpl extends EventRepository {
 
   Future<void> _handleReceivedMessageEvent(ReceivedMessageEvent event) async {
     final message = event.messageDto.toMessageEntity(false);
-    await _messageDao.insert(message);
+    await _channelFullDao.insertMessage(message);
   }
 
   Future<void> _handleConnectedToUserEvent(ConnectedToUserEvent event) async {
@@ -120,9 +120,9 @@ class EventRepositoryImpl extends EventRepository {
   Future<void> _handleMessageSent(MessageSentEvent event) async {
     final message = event.messageDto.toMessageEntity(true);
     if (event.provisionalId != null) {
-      await _messageDao.replace(event.provisionalId!, message);
+      await _channelFullDao.replaceMessage(event.provisionalId!, message);
     } else {
-      await _messageDao.insert(message);
+      await _channelFullDao.insertMessage(message);
     }
   }
 

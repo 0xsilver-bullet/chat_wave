@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:chat_wave/core/data/db/dao/channel_dao.dart';
 import 'package:chat_wave/core/data/db/dao/channel_membership_dao.dart';
 import 'package:chat_wave/core/data/db/dao/friend_dao.dart';
+import 'package:chat_wave/core/data/db/dao/message_dao.dart';
 import 'package:chat_wave/core/data/db/entity/channel.dart';
 import 'package:chat_wave/core/data/db/entity/channel_membership.dart';
 import 'package:chat_wave/core/data/db/entity/friend.dart';
@@ -23,10 +24,12 @@ class ChannelFullDao {
     required FriendDao friendDao,
     required ChannelDao channelDao,
     required ChannelMembershipDao channelMembershipDao,
+    required MessageDao messageDao,
   })  : _db = db,
         _friendDao = friendDao,
         _channelDao = channelDao,
-        _channelMembershipDao = channelMembershipDao {
+        _channelMembershipDao = channelMembershipDao,
+        _messageDao = messageDao {
     _streamController = BehaviorSubject.seeded([]);
   }
 
@@ -34,6 +37,7 @@ class ChannelFullDao {
   final FriendDao _friendDao;
   final ChannelDao _channelDao;
   final ChannelMembershipDao _channelMembershipDao;
+  final MessageDao _messageDao;
   late final BehaviorSubject<List<ChannelFullEntity>> _streamController;
 
   Stream<List<ChannelFullEntity>> get watchChannels {
@@ -60,6 +64,30 @@ class ChannelFullDao {
     await _friendDao.upsertAll(friends);
     await _channelDao.upsertAll(channels);
     await _channelMembershipDao.upsertAll(memberships);
+    updateStream();
+  }
+
+  Future<void> insertMessage(MessageEntity message) async {
+    await _messageDao.insert(message);
+    updateStream();
+  }
+
+  Future<void> insertAllMessages(List<MessageEntity> messages) async {
+    await _messageDao.insertAll(messages);
+    updateStream();
+  }
+
+  Future<int> deleteMessageById(String messageId) async {
+    final deletedCount = await _messageDao.deleteById(messageId);
+    updateStream();
+    return deletedCount;
+  }
+
+  Future<void> replaceMessage(
+    String provisionalId,
+    MessageEntity newMessage,
+  ) async {
+    await _messageDao.replace(provisionalId, newMessage);
     updateStream();
   }
 

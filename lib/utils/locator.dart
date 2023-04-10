@@ -101,7 +101,11 @@ void setupServiceLocator() {
     () {
       final db = locator<ChatWaveDb>();
       final prefs = locator<AppPreferences>();
-      return MessageRepositoryImpl(prefs, db.messageDao);
+      return MessageRepositoryImpl(
+        prefs,
+        db.messageDao,
+        db.channelFullDao,
+      );
     },
   );
 

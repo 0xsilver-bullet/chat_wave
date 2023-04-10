@@ -31,6 +31,7 @@ class ChatWaveDb {
       channelDao: _channelDao!,
       friendDao: _friendDao!,
       channelMembershipDao: _channelMembershipDao!,
+      messageDao: _messageDao!,
     );
     return _database!;
   }
