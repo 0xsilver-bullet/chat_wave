@@ -47,6 +47,7 @@ class MessageDao {
       tableName,
       where: 'channel_id = ?',
       whereArgs: [channelId],
+      orderBy: 'timestamp DESC',
     );
     return results.map((map) => MessageEntity.froMap(map)).toList();
   }

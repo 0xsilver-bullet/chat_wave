@@ -1,3 +1,5 @@
+import 'package:chat_wave/utils/list_ext.dart';
+
 class MessageEntity {
   MessageEntity({
     required this.id,
@@ -18,8 +20,9 @@ class MessageEntity {
         senderId = map['sender_id'],
         seenBy = (map['seen_by'] as String)
             .split(',')
-            .map((id) => int.parse(id))
-            .toList(),
+            .map((id) => int.tryParse(id))
+            .toList()
+            .mapNotNull(),
         timestamp = map['timestamp'],
         isOwnMessage = map['is_own_message'] == 1 ? true : false;
 

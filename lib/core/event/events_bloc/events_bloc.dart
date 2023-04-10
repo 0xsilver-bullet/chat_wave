@@ -13,7 +13,7 @@ class EventsBloc extends Bloc<EventsEvent, EventsState> {
     on<Initialize>(_handleInitializeEvent);
     on<Pause>(_handlePauseEvent);
     on<Resume>(_handleResumeEvent);
-    on<SendDm>(_handleSendDm);
+    on<SendMessage>(_handleSendMessage);
   }
 
   final repository = locator<EventRepository>();
@@ -44,13 +44,14 @@ class EventsBloc extends Bloc<EventsEvent, EventsState> {
     emit(Initialized());
   }
 
-  Future<void> _handleSendDm(
-    SendDm event,
+  Future<void> _handleSendMessage(
+    SendMessage event,
     Emitter<EventsState> emit,
   ) async {
-    final sendDmEvent = SendDmMessageEvent(
+    final sendDmEvent = SendMessageEvent(
+      channelId: event.channelId,
       text: event.text,
-      receiverId: event.receiverId,
+      imageUrl: null,
       provisionalId: event.provisionalId,
     );
     repository.emitClientEvent(sendDmEvent);

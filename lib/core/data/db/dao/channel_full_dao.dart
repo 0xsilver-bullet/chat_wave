@@ -8,6 +8,7 @@ import 'package:chat_wave/core/data/db/entity/channel_membership.dart';
 import 'package:chat_wave/core/data/db/entity/friend.dart';
 import 'package:chat_wave/core/data/db/entity/message.dart';
 import 'package:chat_wave/core/data/db/util/channel_type.dart';
+import 'package:chat_wave/utils/list_ext.dart';
 import 'package:collection/collection.dart';
 
 import 'package:chat_wave/core/data/db/entity/channel_full.dart';
@@ -129,8 +130,9 @@ class ChannelFullDao {
             senderId: value[0]['last_message_sender_id'] as int,
             seenBy: (value[0]['last_message_seen_by'] as String)
                 .split(',')
-                .map((id) => int.parse(id))
-                .toList(),
+                .map((id) => int.tryParse(id))
+                .toList()
+                .mapNotNull(),
             timestamp: value[0]['last_message_timestamp'] as int,
             isOwnMessage: (value[0]['last_message_is_own_message'] as int) == 0
                 ? false

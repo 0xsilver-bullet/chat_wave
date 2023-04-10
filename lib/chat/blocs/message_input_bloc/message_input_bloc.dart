@@ -30,9 +30,9 @@ class MessageInputBloc extends Bloc<MessageInputEvent, MessageInputState> {
     final provisionalId = _uuId.v4();
     _messageRepository.saveMessage(event.message, sendChannelId, provisionalId);
     eventsBloc.add(
-      SendDm(
+      SendMessage(
+        channelId: sendChannelId,
         text: event.message,
-        receiverId: sendChannelId,
         provisionalId: provisionalId,
       ),
     );

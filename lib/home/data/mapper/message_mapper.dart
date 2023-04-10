@@ -5,7 +5,7 @@ import 'package:intl/intl.dart';
 extension Mapper on MessageEntity {
   Message toMessage() {
     final dateTime = DateTime.fromMillisecondsSinceEpoch(timestamp);
-    final formattedDate = DateFormat('hh::mm a').format(dateTime);
+    final formattedDate = DateFormat('hh:mm a').format(dateTime);
     return Message(
       id: id,
       channelId: channelId,

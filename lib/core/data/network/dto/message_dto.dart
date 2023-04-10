@@ -15,7 +15,7 @@ class MessageDto {
         imageUrl = json['imageUrl'],
         channelId = json['channelId'],
         senderId = json['senderId'],
-        seenBy = json['seenBy'],
+        seenBy = (json['seenBy'] as List).isEmpty ? [] : json['seenBy'],
         timestamp = json['timestamp'];
 
   final String id;
