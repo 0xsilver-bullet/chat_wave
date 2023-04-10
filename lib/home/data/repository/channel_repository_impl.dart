@@ -1,6 +1,7 @@
 import 'package:chat_wave/core/data/db/dao/channel_full_dao.dart';
 import 'package:chat_wave/core/data/db/util/channel_type.dart';
 import 'package:chat_wave/core/data/mapper/friend_mapper.dart';
+import 'package:chat_wave/core/domain/app_preferences.dart';
 import 'package:chat_wave/core/domain/model/channel.dart';
 import 'package:chat_wave/core/domain/model/dm_channel.dart';
 import 'package:chat_wave/core/domain/model/group_channel.dart';
@@ -13,15 +14,22 @@ import 'package:collection/collection.dart';
 import 'package:rxdart/rxdart.dart';
 
 class ChannelRepositoryImpl extends ChannelRepository {
-  ChannelRepositoryImpl(
-    ChannelFullDao channelFullDao,
-    OnlineStatusProvider onlineStatusProvider,
-  )   : _channelFullDao = channelFullDao,
-        _onlineStatusProvider = onlineStatusProvider;
+  ChannelRepositoryImpl(ChannelFullDao channelFullDao,
+      OnlineStatusProvider onlineStatusProvider, AppPreferences prefs)
+      : _channelFullDao = channelFullDao,
+        _onlineStatusProvider = onlineStatusProvider,
+        _prefs = prefs;
 
   final ChannelFullDao _channelFullDao;
   final OnlineStatusProvider _onlineStatusProvider;
+  final AppPreferences _prefs;
   final _api = ChannelsApiClient();
+  late final int _userId;
+
+  Future<void> init() async {
+    final userId = await _prefs.getUserId();
+    _userId = userId!;
+  }
 
   @override
   Stream<List<Channel>> get watchChannels => CombineLatestStream.combine2(
@@ -31,7 +39,9 @@ class ChannelRepositoryImpl extends ChannelRepository {
           final result = channels.map(
             (channelData) {
               if (channelData.channel.type == ChannelType.dm) {
-                final friend = channelData.channelUsers.firstOrNull;
+                final friend = channelData.channelUsers
+                    .where((channelUser) => channelUser.id != _userId)
+                    .firstOrNull;
                 return DmChannel(
                   friendInfo: friend!.toUserInfo(),
                   online: onlineUsersIds.contains(friend.id),

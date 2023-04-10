@@ -14,13 +14,16 @@ part 'channels_state.dart';
 class ChannelsBloc extends Bloc<ChannelsEvent, ChannelsState> {
   ChannelsBloc() : super(const ChannelsList([])) {
     on<ChannelsLoaded>(_handleChannelsLoadedEvent);
-    _channelsStreamSubscribtion = _repo.watchChannels.listen(
-      (channels) {
-        add(ChannelsLoaded(channels));
+    locator.getAsync<ChannelRepository>().then(
+      (repo) {
+        _channelsStreamSubscribtion = repo.watchChannels.listen(
+          (channels) {
+            add(ChannelsLoaded(channels));
+          },
+        );
       },
     );
   }
-  final _repo = locator<ChannelRepository>();
   late final StreamSubscription<List<Channel>> _channelsStreamSubscribtion;
 
   void _handleChannelsLoadedEvent(

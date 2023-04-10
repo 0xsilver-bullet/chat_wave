@@ -84,14 +84,18 @@ void setupServiceLocator() {
     },
   );
 
-  locator.registerLazySingleton<ChannelRepository>(
-    () {
+  locator.registerLazySingletonAsync<ChannelRepository>(
+    () async {
       final db = locator<ChatWaveDb>();
       final onlineStatusProvider = locator<OnlineStatusProvider>();
-      return ChannelRepositoryImpl(
+      final prefs = locator<AppPreferences>();
+      final channelRepo = ChannelRepositoryImpl(
         db.channelFullDao,
         onlineStatusProvider,
+        prefs,
       );
+      await channelRepo.init();
+      return channelRepo;
     },
   );
 
