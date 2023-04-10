@@ -21,14 +21,14 @@ class Pause extends EventsEvent {}
 class Resume extends EventsEvent {}
 
 @immutable
-class SendDm extends EventsEvent {
-  const SendDm({
+class SendMessage extends EventsEvent {
+  const SendMessage({
+    required this.channelId,
     required this.text,
-    required this.receiverId,
     required this.provisionalId,
   });
 
+  final int channelId;
   final String text;
-  final int receiverId;
   final String? provisionalId;
 }

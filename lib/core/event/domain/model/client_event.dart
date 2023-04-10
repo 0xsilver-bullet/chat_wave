@@ -11,15 +11,17 @@ abstract class ClientEvent {
   String toJson();
 }
 
-class SendDmMessageEvent extends ClientEvent {
-  const SendDmMessageEvent({
+class SendMessageEvent extends ClientEvent {
+  const SendMessageEvent({
+    required this.channelId,
     required this.text,
-    required this.receiverId,
+    required this.imageUrl,
     required this.provisionalId,
-  }) : super('send_dm_message_cli_event');
+  }) : super('send_message_cli_event');
 
-  final String text;
-  final int receiverId;
+  final int channelId;
+  final String? text;
+  final String? imageUrl;
   final String? provisionalId;
 
   @override
@@ -27,8 +29,9 @@ class SendDmMessageEvent extends ClientEvent {
     return jsonEncode(
       {
         'event': event,
+        'channelId': channelId,
         'text': text,
-        'receiverId': receiverId,
+        'imageUrl': imageUrl,
         'provisionalId': provisionalId,
       },
     );
@@ -36,18 +39,22 @@ class SendDmMessageEvent extends ClientEvent {
 }
 
 @immutable
-class SeenDmMessageEvent extends ClientEvent {
-  const SeenDmMessageEvent({required this.messageId})
-      : super('seen_dm_message_cli_event');
+class SeenMessageEvent extends ClientEvent {
+  const SeenMessageEvent({
+    required this.channelId,
+    required this.messagesIds,
+  }) : super('seen_messages_cli_event');
 
-  final String messageId;
+  final int channelId;
+  final List<String> messagesIds;
 
   @override
   String toJson() {
     return jsonEncode(
       {
         'event': event,
-        'messageId': messageId,
+        'channelId': channelId,
+        'messagesIds': messagesIds,
       },
     );
   }

@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:dio/dio.dart';
 
 import 'package:chat_wave/core/data/network/api_error.dart';
@@ -29,17 +27,12 @@ class FriendsApiClient {
     }
   }
 
-  Future<ApiResponse<FriendDto>> addUserAsFriend(String username) async {
-    final friendRequest = jsonEncode(
-      {'username': username},
-    );
-    final response = await _dio.post(
-      '${BWaveApi.baseUrl}connection/connect',
-      data: friendRequest,
-    );
+  Future<ApiResponse<String>> requestFriendshipSecret() async {
+    final response =
+        await _dio.post('${BWaveApi.baseUrl}connection/generate-secret');
     if (response.statusCode == 200) {
-      final friend = FriendDto.fromJson(response.data['connectedUser']);
-      return ApiResponse(isSuccessful: true, data: friend);
+      final secret = response.data['secret'];
+      return ApiResponse(isSuccessful: true, data: secret);
     } else {
       return ApiResponse(
         isSuccessful: false,

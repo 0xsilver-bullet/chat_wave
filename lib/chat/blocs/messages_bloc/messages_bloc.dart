@@ -1,7 +1,7 @@
 import 'dart:async';
 
 import 'package:bloc/bloc.dart';
-import 'package:chat_wave/chat/repository/dm_repository.dart';
+import 'package:chat_wave/chat/data/repository/message_repository.dart';
 import 'package:chat_wave/core/domain/model/message.dart';
 import 'package:chat_wave/utils/locator.dart';
 import 'package:equatable/equatable.dart';
@@ -18,17 +18,16 @@ class MessagesBloc extends Bloc<MessagesEvent, MessagesState> {
       emit(MessagesList(event.messages));
     });
 
-    _subscription = _dmRepository.watchFriendDms(channelId).listen(
+    _subscription = _messageRepository.watchChannelMessages(channelId).listen(
       (event) {
         add(LoadedMessages(event));
       },
     );
   }
-
   late final StreamSubscription _subscription;
 
   final int channelId;
-  final _dmRepository = locator<DmRepository>();
+  final _messageRepository = locator<MessageRepository>();
 
   @override
   Future<void> close() {

@@ -1,7 +1,8 @@
+import 'package:equatable/equatable.dart';
 import 'package:flutter/foundation.dart';
 
 @immutable
-class UserInfo {
+class UserInfo extends Equatable {
   const UserInfo({
     required this.name,
     required this.username,
@@ -9,8 +10,16 @@ class UserInfo {
     required this.id,
   });
 
+  final int id;
   final String name;
   final String username;
   final String? profilePicUrl;
-  final int id;
+
+  @override
+  List<Object?> get props => [
+        id,
+        name,
+        username,
+        profilePicUrl,
+      ];
 }

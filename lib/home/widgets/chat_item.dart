@@ -33,17 +33,17 @@ class ChatItem extends StatelessWidget {
                   onTap: () => Navigator.of(context).push(
                     TransparentRoute(
                       builder: (_) => ProfilePictureScreen(
-                          heroTag: channel.channelId,
-                          url: channel.channelImageUrl ??
+                          heroTag: channel.id,
+                          url: channel.imageUrl ??
                               'https://h-o-m-e.org/wp-content/uploads/2022/04/Blank-Profile-Picture-1.jpg'),
                     ),
                   ),
                   child: Hero(
-                    tag: channel.channelId,
+                    tag: channel.id,
                     child: CircleAvatar(
                       radius: 36,
                       backgroundImage: CachedNetworkImageProvider(
-                        channel.channelImageUrl ??
+                        channel.imageUrl ??
                             'https://h-o-m-e.org/wp-content/uploads/2022/04/Blank-Profile-Picture-1.jpg',
                       ),
                     ),
@@ -74,7 +74,7 @@ class ChatItem extends StatelessWidget {
                     children: [
                       Expanded(
                         child: Text(
-                          channel.channelName,
+                          channel.name,
                           style: Theme.of(context).textTheme.displayMedium,
                           overflow: TextOverflow.ellipsis,
                         ),

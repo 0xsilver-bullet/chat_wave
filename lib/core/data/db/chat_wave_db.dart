@@ -1,6 +1,8 @@
-import 'package:chat_wave/core/data/db/dao/db_message_dao.dart';
-import 'package:chat_wave/core/data/db/dao/dm_channel_dao.dart';
+import 'package:chat_wave/core/data/db/dao/channel_dao.dart';
+import 'package:chat_wave/core/data/db/dao/channel_full_dao.dart';
+import 'package:chat_wave/core/data/db/dao/channel_membership_dao.dart';
 import 'package:chat_wave/core/data/db/dao/friend_dao.dart';
+import 'package:chat_wave/core/data/db/dao/message_dao.dart';
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 
@@ -17,20 +19,30 @@ class ChatWaveDb {
       path,
       version: version,
       onCreate: (db, version) {
-        _initializeDAOs(db);
+        _createTables(db);
       },
     );
-    _dmChannelDao = DmChannelDao(_database!);
-    _dmMessageDao = DmMessageDao(_database!, _dmChannelDao!);
     _friendDao = FriendDao(_database!);
+    _channelDao = ChannelDao(_database!);
+    _messageDao = MessageDao(_database!);
+    _channelMembershipDao = ChannelMembershipDao(_database!);
+    _channelFullDao = ChannelFullDao(
+      db: _database!,
+      channelDao: _channelDao!,
+      friendDao: _friendDao!,
+      channelMembershipDao: _channelMembershipDao!,
+      messageDao: _messageDao!,
+    );
     return _database!;
   }
 
   static const int version = 1;
   static Database? _database;
-  static DmMessageDao? _dmMessageDao;
   static FriendDao? _friendDao;
-  static DmChannelDao? _dmChannelDao;
+  static ChannelDao? _channelDao;
+  static MessageDao? _messageDao;
+  static ChannelMembershipDao? _channelMembershipDao;
+  static ChannelFullDao? _channelFullDao;
 
   Future<Database> get database async {
     if (_database != null) {
@@ -40,13 +52,16 @@ class ChatWaveDb {
     return await initialize();
   }
 
-  DmMessageDao get dmMessageDao => _dmMessageDao!;
   FriendDao get friendDao => _friendDao!;
-  DmChannelDao get dmChannelDao => _dmChannelDao!;
+  ChannelDao get channelDao => _channelDao!;
+  MessageDao get messageDao => _messageDao!;
+  ChannelMembershipDao get channelMembershipDao => _channelMembershipDao!;
+  ChannelFullDao get channelFullDao => _channelFullDao!;
 
-  Future<void> _initializeDAOs(Database db) async {
-    await DmMessageDao.createTable(db);
+  Future<void> _createTables(Database db) async {
     await FriendDao.createTable(db);
-    await DmChannelDao.createTable(db);
+    await ChannelDao.createTable(db);
+    await MessageDao.createTable(db);
+    await ChannelMembershipDao.createTable(db);
   }
 }

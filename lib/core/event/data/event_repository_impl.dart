@@ -1,30 +1,34 @@
 import 'dart:async';
 import 'dart:convert';
 
+import 'package:chat_wave/core/data/db/dao/channel_full_dao.dart';
 import 'package:chat_wave/core/data/db/dao/friend_dao.dart';
-import 'package:chat_wave/core/data/db/entity/dm_message.dart';
+import 'package:chat_wave/core/data/db/dao/message_dao.dart';
 import 'package:chat_wave/core/data/db/entity/friend.dart';
+import 'package:chat_wave/core/data/mapper/message_mapper.dart';
 import 'package:chat_wave/core/data/network/b_wave_api.dart';
 import 'package:chat_wave/core/domain/online_status_provider.dart';
 import 'package:chat_wave/core/domain/token_manager.dart';
 import 'package:chat_wave/core/event/domain/model/client_event.dart';
 import 'package:chat_wave/core/event/domain/model/server_event.dart';
+import 'package:chat_wave/home/data/mapper/channel_full_mapper.dart';
 import 'package:web_socket_channel/io.dart';
 
-import '../../data/db/dao/db_message_dao.dart';
 import '../domain/event_repository.dart';
 
 class EventRepositoryImpl extends EventRepository {
   EventRepositoryImpl(
     this._tokenManager,
-    this._dmDao,
     this._friendDao,
+    this._messageDao,
+    this._channelFullDao,
     this._onlineStatusProvider,
   );
 
   final TokenManager _tokenManager;
-  final DmMessageDao _dmDao;
   final FriendDao _friendDao;
+  final MessageDao _messageDao;
+  final ChannelFullDao _channelFullDao;
   final OnlineStatusProvider _onlineStatusProvider;
 
   IOWebSocketChannel? _channel;
@@ -85,53 +89,40 @@ class EventRepositoryImpl extends EventRepository {
   Future<void> _handleEvent(dynamic event) async {
     final eventJson = jsonDecode(event);
     final serverEvent = ServerEvent.parse(eventJson);
-    if (serverEvent is ReceivedDmMessageEvent) {
+    if (serverEvent is ReceivedMessageEvent) {
       await _handleReceivedMessageEvent(serverEvent);
     } else if (serverEvent is ConnectedToUserEvent) {
       await _handleConnectedToUserEvent(serverEvent);
-    } else if (serverEvent is DmSentEvent) {
-      await _handleDmSent(serverEvent);
+    } else if (serverEvent is MessageSentEvent) {
+      await _handleMessageSent(serverEvent);
     } else if (serverEvent is FriendOnlineStatusEvent) {
       await _handleFriendOnlineStatusEvent(serverEvent);
+    } else if (serverEvent is AddedToChannel) {
+      await _handleAddedToChannelEvent(serverEvent);
     }
   }
 
-  Future<void> _handleReceivedMessageEvent(ReceivedDmMessageEvent event) async {
-    final message = DmMessageEntity(
-      id: event.messageDto.id,
-      text: event.messageDto.text,
-      senderId: event.messageDto.senderId,
-      receiverId: event.messageDto.receiverId,
-      timestamp: event.messageDto.timestamp,
-      isOwnMessage: false,
-      seen: false,
-    );
-    await _dmDao.insert(message);
+  Future<void> _handleReceivedMessageEvent(ReceivedMessageEvent event) async {
+    final message = event.messageDto.toMessageEntity(false);
+    await _channelFullDao.insertMessage(message);
   }
 
   Future<void> _handleConnectedToUserEvent(ConnectedToUserEvent event) async {
     final friend = FriendEntity(
+      id: event.user.id,
+      profilePicUrl: event.user.profilePicUrl,
       name: event.user.name,
       username: event.user.username,
-      id: event.user.id,
     );
-    await _friendDao.insertFriend(friend);
+    await _friendDao.insert(friend);
   }
 
-  Future<void> _handleDmSent(DmSentEvent event) async {
-    final message = DmMessageEntity(
-      id: event.messageDto.id,
-      text: event.messageDto.text,
-      senderId: event.messageDto.senderId,
-      receiverId: event.messageDto.receiverId,
-      timestamp: event.messageDto.timestamp,
-      isOwnMessage: true,
-      seen: false,
-    );
+  Future<void> _handleMessageSent(MessageSentEvent event) async {
+    final message = event.messageDto.toMessageEntity(true);
     if (event.provisionalId != null) {
-      await _dmDao.replace(event.provisionalId!, message);
+      await _channelFullDao.replaceMessage(event.provisionalId!, message);
     } else {
-      await _dmDao.insert(message);
+      await _channelFullDao.insertMessage(message);
     }
   }
 
@@ -145,5 +136,10 @@ class EventRepositoryImpl extends EventRepository {
       // then he is offline
       _onlineStatusProvider.markUserAsOffline(event.friendId);
     }
+  }
+
+  Future<void> _handleAddedToChannelEvent(AddedToChannel event) async {
+    final channelFull = event.channelDto.toFullChannelEntity();
+    await _channelFullDao.insertAll([channelFull]);
   }
 }

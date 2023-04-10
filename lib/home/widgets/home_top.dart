@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+
+import '../blocs/connect_bloc/connect_bloc.dart';
 
 class HomeTop extends StatelessWidget {
   const HomeTop({
@@ -36,10 +39,32 @@ class HomeTop extends StatelessWidget {
                 icon: const Icon(Icons.ios_share),
                 splashRadius: 18,
               ),
-              IconButton(
-                onPressed: onAddClick,
-                icon: const Icon(Icons.add),
-                splashRadius: 18,
+              BlocBuilder<ConnectBloc, ConnectState>(
+                builder: (context, state) {
+                  if (state is Loading) {
+                    return const CircularProgressIndicator(
+                      backgroundColor: Colors.black,
+                    );
+                  } else if (state is ConnectedToFriend) {
+                    return IconButton(
+                      onPressed: () {},
+                      icon: const Icon(
+                        Icons.check,
+                        color: Colors.green,
+                      ),
+                    );
+                  } else if (state is FailedToConnect) {
+                    return IconButton(
+                      onPressed: () {},
+                      icon: const Icon(Icons.error),
+                    );
+                  }
+                  return IconButton(
+                    onPressed: onAddClick,
+                    icon: const Icon(Icons.add),
+                    splashRadius: 18,
+                  );
+                },
               ),
             ],
           ),

@@ -1,3 +1,4 @@
+import 'package:chat_wave/core/domain/model/user_info.dart';
 import 'package:flutter/foundation.dart';
 
 import 'channel.dart';
@@ -5,40 +6,39 @@ import 'message.dart';
 
 @immutable
 class DmChannel extends Channel {
-  const DmChannel({
-    required this.friendName,
-    required this.friendId,
+  DmChannel({
+    required this.friendInfo,
     required this.online,
+    required int channelId,
     required Message? lastMessage,
-    required String? profilePicUrl,
   }) : super(
-          channelId: friendId,
-          channelName: friendName,
+          id: channelId,
+          name: friendInfo.name,
           lastMessage: lastMessage,
-          channelImageUrl: profilePicUrl,
+          imageUrl: friendInfo.profilePicUrl,
         );
 
-  final int friendId;
-  final String friendName;
+  final UserInfo friendInfo;
   final bool online;
 
   DmChannel copyWith({
-    String? friendName,
-    int? friendId,
+    int? channelId,
+    UserInfo? friendInfo,
     bool? online,
     Message? lastMessage,
-    String? profilePicUrl,
   }) {
     return DmChannel(
-      friendName: friendName ?? this.friendName,
-      friendId: friendId ?? this.friendId,
+      channelId: channelId ?? id,
+      friendInfo: friendInfo ?? this.friendInfo,
       online: online ?? this.online,
       lastMessage: lastMessage ?? this.lastMessage,
-      profilePicUrl: profilePicUrl ?? channelImageUrl,
     );
   }
 
   @override
-  List<Object?> get props =>
-      super.props..addAll([friendId, friendName, online]);
+  List<Object?> get props => super.props
+    ..addAll([
+      friendInfo,
+      online,
+    ]);
 }
